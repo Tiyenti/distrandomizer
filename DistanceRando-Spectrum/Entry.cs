@@ -423,10 +423,10 @@ namespace DistanceRando
                             // can't complete the map, no flight
                             continue;
                         }
-                        else if ((!isJumpEnabled && !canFly) && logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets)
+                        else if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled)))
                         {
+                            // nope move along
                             Console.WriteLine($"no jump or flight");
-                            // can't complete the map, no nothing
                             continue;
                         }
                         else
