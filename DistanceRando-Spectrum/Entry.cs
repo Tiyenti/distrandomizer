@@ -16,8 +16,6 @@ namespace DistanceRando
 
     public class Entry : IPlugin
     {
-        public string IPCIdentifier { get; set; }
-
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
         bool started = false;
@@ -35,7 +33,7 @@ namespace DistanceRando
 
         FileVersionInfo version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
 
-        public void Initialize(IManager manager)
+        public void Initialize(IManager manager, string ipcIdentifier)
         {
             MainMenu.Loaded += (sender, args) =>
             {
