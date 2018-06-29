@@ -16,7 +16,7 @@ namespace DistanceRando
 
     public class Entry : IPlugin
     {
-        public string IPCIdentifier { get { return "DistanceRandomizer"; } set { } }
+        public string IPCIdentifier { get; set; }
 
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
