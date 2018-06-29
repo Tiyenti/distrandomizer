@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Spectrum.API;
-using Spectrum.Interop;
 using Spectrum.API.Interfaces.Systems;
 using Spectrum.API.Interfaces.Plugins;
 using UnityEngine;
 using Spectrum.Interop.Game;
-using Spectrum.Interop.Game.EventArgs.Scene;
 using System.IO;
 using Spectrum.Interop.Game.Vehicle;
 using System.Reflection;
@@ -19,10 +16,7 @@ namespace DistanceRando
 
     public class Entry : IPlugin
     {
-        public string FriendlyName => "Distance Randomizer";
-        public string Author => "TntMatthew";
-        public string Contact => "@TntMatthew#3201 on Discord";
-        public APILevel CompatibleAPILevel => APILevel.XRay;
+        public string IPCIdentifier { get { return "DistanceRandomizer"; } set { } }
 
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
