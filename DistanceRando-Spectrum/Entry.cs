@@ -338,7 +338,7 @@ namespace DistanceRando
                             // can't complete the map, no flight
                             continue;
                         }
-                        else if (!isJumpEnabled && !canFly && logicInfo.abilityUnlockRequirement == AbilityRequirement.JumpWingsJets)
+                        else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled))
                         {
                             Console.WriteLine($"no jump or flight");
                             // can't complete the map, no nothing
@@ -355,8 +355,19 @@ namespace DistanceRando
                                 Console.WriteLine($"{ability.ToString()} - {isJumpEnabled} - {isWingsEnabled} - {isJetsEnabled} - {canFly}");
                                 if (ability == Ability.Jump)
                                 {
-                                    if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled) ||
-                                        (logicInfo.abilityCompleteRequirement == AbilityRequirement.WingsJets && !canFly)))
+                                    if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled))
+                                    {
+                                        // this can be improved, right now even if you could beat the map by reaching the ability trigger
+                                        // and getting the ability you're missing at it, the logic will still ditch it anyway.
+                                        // doesn't really matter for the current officials as most of them that would benefit
+                                        // from this require jumpflight to get the trigger anyway, but still.
+
+                                        // nope move along
+                                        Console.WriteLine($"did not add. requries jump+flight to beat, canFly = {canFly}, " +
+                                            $"canJump = {isJumpEnabled} and the enabled ability is {ability.ToString()}");
+                                        continue;
+                                    }
+                                    else if  (logicInfo.abilityCompleteRequirement == AbilityRequirement.WingsJets && !canFly)
                                     {
                                         // nope move along
                                         Console.WriteLine($"did not add. requries flight to beat, canFly = {canFly}, and the enabled ability is {ability.ToString()}");
