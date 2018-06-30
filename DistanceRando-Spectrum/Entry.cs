@@ -40,7 +40,7 @@ namespace DistanceRando
                 if (G.Sys.GameManager_.FirstMainMenuLoad_)
                 {
                     manager.Hotkeys.Bind("R", () => {
-                        if (Game.SceneName == "MainMenu")
+                        if (Game.SceneName == "MainMenu" && G.Sys.GameManager_.SoloAndNotOnline_)
                         {
                             if (!G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.trackmogrifyInput_.isSelected)
                             {
