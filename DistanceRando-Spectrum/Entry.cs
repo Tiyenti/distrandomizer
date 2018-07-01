@@ -78,6 +78,9 @@ namespace DistanceRando
                     maps = new Dictionary<string, RandoMap>();
                     started = false;
                     startGame = false;
+                    jumpShouldBeEnabled = false;
+                    wingsShouldBeEnabled = false;
+                    jetsShouldBeEnabled = false;
                     availableMaps = new List<string>(){ "Broken Symmetry", "Lost Society", "Negative Space", "Departure", "Ground Zero",
                                                 "Aftermath", "Friction", "The Thing About Machines", "Corruption", "Monolith" };
                 }
@@ -104,7 +107,9 @@ namespace DistanceRando
                 if (started)
                 {
                     ApplyRandoChanges();
-
+                    CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
+                    Console.WriteLine("Start event fired");
+                    Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
                 }
             };
 
@@ -133,12 +138,14 @@ namespace DistanceRando
             {
                 if (started)
                 {
+                    Console.WriteLine("Respawn event fired");
                     RandoMap map = maps[Game.LevelName];
                     CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
                     car.Boost_.AbilityEnabled_ = map.boostEnabled;
                     car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
                     car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
                     car.Jets_.AbilityEnabled_ = jetsShouldBeEnabled;
+                    Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
                     car.GetComponent<HornGadget>().enabled = true;
                     car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
                 }
@@ -172,10 +179,10 @@ namespace DistanceRando
             G.Sys.GameManager_.Level_.Settings_.disableJetRotating_ = !map.jetsEnabled;
 
             CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-            car.Boost_.AbilityEnabled_ = map.boostEnabled;
+            /*car.Boost_.AbilityEnabled_ = map.boostEnabled;
             car.Jump_.AbilityEnabled_ = map.jumpEnabled;
             car.Wings_.AbilityEnabled_ = map.wingsEnabled;
-            car.Jets_.AbilityEnabled_ = map.jetsEnabled;
+            car.Jets_.AbilityEnabled_ = map.jetsEnabled;*/
 
             jumpShouldBeEnabled = map.jumpEnabled;
             wingsShouldBeEnabled = map.wingsEnabled;
@@ -199,9 +206,14 @@ namespace DistanceRando
                 GameObject.Destroy(obj.gameObject);
             }
 
+            foreach (var obj in UnityEngine.Object.FindObjectsOfType<AdventureAbilitySettings>())
+            {
+                GameObject.Destroy(obj.gameObject);
+            }
+
             if (map.abilityEnabled != Ability.None)
             {
-                Console.WriteLine("enables ability");
+                Console.WriteLine($"enables {map.abilityEnabled.ToString()}");
                 EnableAbilitiesTrigger trigger = GameObject.Find("EnableAbilitiesBox").GetComponent<EnableAbilitiesTrigger>();
 
                 if (map.abilityEnabled == Ability.Jump)
