@@ -146,19 +146,32 @@ namespace DistanceRando
                 if (started)
                 {
                     Console.WriteLine("Respawn event fired");
-                    RandoMap map = maps[Game.LevelName];
                     CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                    if (!singleRaceStarted)
+                    try
                     {
-                        jumpShouldBeEnabled = map.jumpEnabled;
-                        wingsShouldBeEnabled = map.wingsEnabled;
-                        jetsShouldBeEnabled = map.jetsEnabled;
+                        RandoMap map = maps[Game.LevelName];
+                        if (!singleRaceStarted)
+                        {
+                            jumpShouldBeEnabled = map.jumpEnabled;
+                            wingsShouldBeEnabled = map.wingsEnabled;
+                            jetsShouldBeEnabled = map.jetsEnabled;
+                        }
+                        car.Boost_.AbilityEnabled_ = map.boostEnabled;
+                        car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
+                        car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
+                        car.Jets_.AbilityEnabled_ = jetsShouldBeEnabled;
+                        Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
+
                     }
-                    car.Boost_.AbilityEnabled_ = map.boostEnabled;
-                    car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
-                    car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
-                    car.Jets_.AbilityEnabled_ = jetsShouldBeEnabled;
-                    Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
+                    catch (KeyNotFoundException)
+                    {
+                        // this should only ever happen on Credits or Destination Unknown, so just enable everything
+                        car.Boost_.AbilityEnabled_ = true;
+                        car.Jump_.AbilityEnabled_ = true;
+                        car.Wings_.AbilityEnabled_ = true;
+                        car.Jets_.AbilityEnabled_ = true;
+                    }
+
                     car.GetComponent<HornGadget>().enabled = true;
                     car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
                 }
