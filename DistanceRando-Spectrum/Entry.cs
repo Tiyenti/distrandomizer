@@ -20,6 +20,7 @@ namespace DistanceRando
 
         bool started = false;
         bool startGame = false;
+        bool singleRaceStarted = false;
 
         bool jumpShouldBeEnabled = false;
         bool wingsShouldBeEnabled = false;
@@ -107,10 +108,16 @@ namespace DistanceRando
                 if (started)
                 {
                     ApplyRandoChanges();
+                    singleRaceStarted = true;
                     CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
                     Console.WriteLine("Start event fired");
                     Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
                 }
+            };
+
+            Race.Finished += (sender, args) =>
+            {
+                if (started) singleRaceStarted = false;
             };
 
             LocalVehicle.Exploded += (sender, args) =>
@@ -141,6 +148,12 @@ namespace DistanceRando
                     Console.WriteLine("Respawn event fired");
                     RandoMap map = maps[Game.LevelName];
                     CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
+                    if (!singleRaceStarted)
+                    {
+                        jumpShouldBeEnabled = map.jumpEnabled;
+                        wingsShouldBeEnabled = map.wingsEnabled;
+                        jetsShouldBeEnabled = map.jetsEnabled;
+                    }
                     car.Boost_.AbilityEnabled_ = map.boostEnabled;
                     car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
                     car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
