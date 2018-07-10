@@ -197,6 +197,11 @@ namespace DistanceRando
 
         void ApplyRandoChanges()
         {
+            if (Game.LevelName == "Destination Unknown" || Game.LevelName == "Credits")
+            {
+                return;
+            }
+
             RandoMap map = maps[Game.LevelName];
 
             G.Sys.GameManager_.Level_.Settings_.disableBoosting_ = !map.boostEnabled;
