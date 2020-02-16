@@ -241,7 +241,7 @@ namespace DistanceRando
             jumpShouldBeEnabled = map.jumpEnabled;
             wingsShouldBeEnabled = map.wingsEnabled;
             jetsShouldBeEnabled = map.jetsEnabled;
-            car.GetComponent<HornGadget>().enabled = true;
+            //car.GetComponent<HornGadget>().enabled = true;
 
             foreach (var obj in UnityEngine.Object.FindObjectsOfType<InfoDisplayLogic>())
             {
@@ -268,35 +268,39 @@ namespace DistanceRando
             if (map.abilityEnabled != Ability.None)
             {
                 Console.WriteLine($"enables {map.abilityEnabled.ToString()}");
-                SetAbilitiesTrigger trigger = GameObject.Find("SetAbilitiesTrigger").GetComponent<SetAbilitiesTrigger>();
+                SetAbilitiesTrigger[] triggers = GameObject.FindObjectsOfType<SetAbilitiesTrigger>();
+                //SetAbilitiesTrigger trigger = GameObject.Find("SetAbilitiesTrigger").GetComponent<SetAbilitiesTrigger>();
 
-                if (map.abilityEnabled == Ability.Jump)
+                foreach (var trigger in triggers)
                 {
-                    trigger.enableJumping_ = true;
-                    trigger.enableFlying_ = wingsShouldBeEnabled;
-                    trigger.enableBoosting_ = true;
-                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
-                }
-                else if (map.abilityEnabled == Ability.Wings)
-                {
-                    trigger.enableJumping_ = jumpShouldBeEnabled;
-                    trigger.enableFlying_ = true;
-                    trigger.enableBoosting_ = true;
-                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
-                }
-                else if (map.abilityEnabled == Ability.Jets)
-                {
-                    trigger.enableJumping_ = jumpShouldBeEnabled;
-                    trigger.enableFlying_ = wingsShouldBeEnabled;
-                    trigger.enableBoosting_ = true;
-                    trigger.enableJetRotating_ = true;
-                }
-                else if (map.abilityEnabled == Ability.Boost)
-                {
-                    trigger.enableJumping_ = jumpShouldBeEnabled;
-                    trigger.enableFlying_ = wingsShouldBeEnabled;
-                    trigger.enableBoosting_ = true;
-                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                    if (map.abilityEnabled == Ability.Jump)
+                    {
+                        trigger.enableJumping_ = true;
+                        trigger.enableFlying_ = wingsShouldBeEnabled;
+                        trigger.enableBoosting_ = true;
+                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                    }
+                    else if (map.abilityEnabled == Ability.Wings)
+                    {
+                        trigger.enableJumping_ = jumpShouldBeEnabled;
+                        trigger.enableFlying_ = true;
+                        trigger.enableBoosting_ = true;
+                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                    }
+                    else if (map.abilityEnabled == Ability.Jets)
+                    {
+                        trigger.enableJumping_ = jumpShouldBeEnabled;
+                        trigger.enableFlying_ = wingsShouldBeEnabled;
+                        trigger.enableBoosting_ = true;
+                        trigger.enableJetRotating_ = true;
+                    }
+                    else if (map.abilityEnabled == Ability.Boost)
+                    {
+                        trigger.enableJumping_ = jumpShouldBeEnabled;
+                        trigger.enableFlying_ = wingsShouldBeEnabled;
+                        trigger.enableBoosting_ = true;
+                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                    }
                 }
             }
         }
