@@ -13,7 +13,7 @@ using System.Diagnostics;
 
 namespace DistanceRando
 {
-
+    
     public class Entry : IPlugin
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
@@ -28,18 +28,24 @@ namespace DistanceRando
 
         int seed = 0;
 
-        List<string> availableMaps = new List<string>(){ "Broken Symmetry", "Lost Society", "Negative Space", "Departure", "Ground Zero",
-                                                "Aftermath", "Friction", "The Thing About Machines", "Corruption", "Monolith" };
+        List<string> availableMaps = new List<string>(){ "Cataclysm", "Diversion", "Euphoria", "Entanglement", "Automation",
+                                                "Abyss", "Embers", "Isolation", "Repulsion", "Compression", "Research", "Contagion",
+                                                "Overload", "Ascension"};
         Ability[] abilities = new Ability[] { Ability.Jump, Ability.Wings, Ability.Jets };
 
         FileVersionInfo version = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location);
+
+        bool firstMainMenuLoad = true;
+
+        bool randoChangesApplied = false;
 
         public void Initialize(IManager manager, string ipcIdentifier)
         {
             MainMenu.Loaded += (sender, args) =>
             {
-                if (G.Sys.GameManager_.FirstMainMenuLoad_)
+                if (firstMainMenuLoad)
                 {
+                    firstMainMenuLoad = false;
                     manager.Hotkeys.Bind("R", () => {
                         if (Game.SceneName == "MainMenu" && G.Sys.GameManager_.SoloAndNotOnline_)
                         {
@@ -64,11 +70,14 @@ namespace DistanceRando
                                     }
                                     G.Sys.MenuPanelManager_.Pop();
                                     G.Sys.MenuPanelManager_.ShowTimedOk(10, $"Rando seed has been set to:\n[FF0000]{inputSeed}[-]\n" +
-                                        "Start the [FF0000]Intro[-] map in Adventure mode to begin.", "Rando enabled");
+                                        "Start the [FF0000]Instantiation[-] map in Adventure mode to begin.", "Rando enabled");
                                     startGame = true;
                                     Game.WatermarkText =
                                         $"RANDOMIZER ENABLED - SEED: {inputSeed}\n" +
                                         $"DISTANCE {SystemVersion.DistanceBuild} - RANDOMIZER {version.FileVersion}";
+
+                                    manager.CheatRegistry.Enable("randomizerRun");                                   
+                                    
                                 });
                             }
                         }
@@ -82,8 +91,10 @@ namespace DistanceRando
                     jumpShouldBeEnabled = false;
                     wingsShouldBeEnabled = false;
                     jetsShouldBeEnabled = false;
-                    availableMaps = new List<string>(){ "Broken Symmetry", "Lost Society", "Negative Space", "Departure", "Ground Zero",
-                                                "Aftermath", "Friction", "The Thing About Machines", "Corruption", "Monolith" };
+                    manager.CheatRegistry.Disable("randomizerRun");
+                    availableMaps = new List<string>(){ "Cataclysm", "Diversion", "Euphoria", "Entanglement", "Automation",
+                                                "Abyss", "Embers", "Isolation", "Repulsion", "Compression", "Research", "Contagion",
+                                                "Overload", "Ascension"};
                 }
             };
 
@@ -92,7 +103,7 @@ namespace DistanceRando
                 if (startGame)
                 {
                     Console.WriteLine(G.Sys.GameManager_.NextLevelPathRelative_);
-                    if (G.Sys.GameManager_.NextLevelPathRelative_ == "OfficialLevels/adventureintro.bytes")
+                    if (G.Sys.GameManager_.NextLevelPathRelative_ == "OfficialLevels/Instantiation.bytes")
                     {
                         StartRandoGame();
                     }
@@ -105,19 +116,31 @@ namespace DistanceRando
 
             Race.Started += (sender, args) =>
             {
+                Console.WriteLine("Start/Load event fired");
                 if (started)
                 {
-                    ApplyRandoChanges();
+                    if (!randoChangesApplied)
+                    {
+                        Console.WriteLine(randoChangesApplied);
+                        Console.WriteLine("should only be called once");
+                        ApplyRandoChanges();
+                        randoChangesApplied = true;
+                    }
                     singleRaceStarted = true;
                     CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                    Console.WriteLine("Start event fired");
+                    Console.WriteLine("Start event fired 2");
                     Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
                 }
             };
 
             Race.Finished += (sender, args) =>
             {
-                if (started) singleRaceStarted = false;
+                Console.WriteLine("Finish event fired");
+                if (started)
+                {
+                    singleRaceStarted = false;
+                    randoChangesApplied = false;
+                }
             };
 
             LocalVehicle.Exploded += (sender, args) =>
@@ -172,7 +195,7 @@ namespace DistanceRando
                         car.Jets_.AbilityEnabled_ = true;
                     }
 
-                    car.GetComponent<HornGadget>().enabled = true;
+                    //car.GetComponent<HornGadget>().enabled = true;
                     car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
                 }
             };
@@ -197,7 +220,7 @@ namespace DistanceRando
 
         void ApplyRandoChanges()
         {
-            if (Game.LevelName == "Destination Unknown" || Game.LevelName == "Credits")
+            if (Game.LevelName == "Enemy" || Game.LevelName == "Credits")
             {
                 return;
             }
@@ -245,35 +268,35 @@ namespace DistanceRando
             if (map.abilityEnabled != Ability.None)
             {
                 Console.WriteLine($"enables {map.abilityEnabled.ToString()}");
-                EnableAbilitiesTrigger trigger = GameObject.Find("EnableAbilitiesBox").GetComponent<EnableAbilitiesTrigger>();
+                SetAbilitiesTrigger trigger = GameObject.Find("SetAbilitiesTrigger").GetComponent<SetAbilitiesTrigger>();
 
                 if (map.abilityEnabled == Ability.Jump)
                 {
                     trigger.enableJumping_ = true;
-                    trigger.enableFlying_ = false;
-                    trigger.enableBoosting_ = false;
-                    trigger.enableJetRotating_ = false;
+                    trigger.enableFlying_ = wingsShouldBeEnabled;
+                    trigger.enableBoosting_ = true;
+                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
                 }
                 else if (map.abilityEnabled == Ability.Wings)
                 {
-                    trigger.enableJumping_ = false;
+                    trigger.enableJumping_ = jumpShouldBeEnabled;
                     trigger.enableFlying_ = true;
-                    trigger.enableBoosting_ = false;
-                    trigger.enableJetRotating_ = false;
+                    trigger.enableBoosting_ = true;
+                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
                 }
                 else if (map.abilityEnabled == Ability.Jets)
                 {
-                    trigger.enableJumping_ = false;
-                    trigger.enableFlying_ = false;
-                    trigger.enableBoosting_ = false;
+                    trigger.enableJumping_ = jumpShouldBeEnabled;
+                    trigger.enableFlying_ = wingsShouldBeEnabled;
+                    trigger.enableBoosting_ = true;
                     trigger.enableJetRotating_ = true;
                 }
                 else if (map.abilityEnabled == Ability.Boost)
                 {
-                    trigger.enableJumping_ = false;
-                    trigger.enableFlying_ = false;
+                    trigger.enableJumping_ = jumpShouldBeEnabled;
+                    trigger.enableFlying_ = wingsShouldBeEnabled;
                     trigger.enableBoosting_ = true;
-                    trigger.enableJetRotating_ = false;
+                    trigger.enableJetRotating_ = jetsShouldBeEnabled;
                 }
             }
         }
@@ -294,7 +317,7 @@ namespace DistanceRando
                 G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, map.Key, GetLevelPathFromName(map.Key)));
             }
 
-            G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, "Destination Unknown", GetLevelPathFromName("Destination Unknown")));
+            G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, "Enemy", GetLevelPathFromName("Enemy")));
             G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, "Credits", GetLevelPathFromName("Credits")));
 
             started = true;
@@ -305,7 +328,7 @@ namespace DistanceRando
         {
             string basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-            return Path.Combine(basePath, $"Distance_Data/Resources/{name.ToLowerInvariant()}.bytes");
+            return Path.Combine(basePath, $"Distance_Data/Resources/{name}.bytes");
         }
 
         void Randomize()
@@ -489,8 +512,8 @@ namespace DistanceRando
 
         bool MapEnablesAbilities(string mapName)
         {
-            if (mapName == "Broken Symmetry" || mapName == "Lost Society" || mapName == "Departure" ||
-                mapName == "Aftermath" || mapName == "Monolith")
+            if (mapName == "Cataclysm" || mapName == "Diversion" || mapName == "Entanglement" ||
+                mapName == "Embers")
             {
                 return true;
             }
@@ -548,6 +571,68 @@ namespace DistanceRando
 
         public static MapLogicInfo GetMapLogicInfo(string name)
         {
+            if (name == "Cataclysm")
+            {
+                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.None);
+            }
+            else if (name == "Diversion")
+            {
+                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.None);
+            }
+            else if (name == "Euphoria")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.Jump);
+            }
+            else if (name == "Entanglement")
+            {
+                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.WingsJets);
+            }
+            else if (name == "Automation")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+            }
+            else if (name == "Abyss")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Embers")
+            {
+                return new MapLogicInfo(true, AbilityRequirement.WingsJets, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Isolation")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Repulsion")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Compression")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+            }
+            else if (name == "Research")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Contagion")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Overload")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+            }
+            else if (name == "Ascension")
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+            }
+            else
+            {
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.None);
+            }
+
+            /*
             if (name == "Broken Symmetry")
             {
                 return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.None);
@@ -591,7 +676,7 @@ namespace DistanceRando
             else
             {
                 return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.None);
-            }
+            }*/
         }
     }
 }
