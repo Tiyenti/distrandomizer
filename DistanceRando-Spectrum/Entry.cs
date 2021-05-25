@@ -102,6 +102,8 @@ namespace DistanceRando
                     maps = new Dictionary<string, RandoMap>();
                     started = false;
                     startGame = false;
+                    randoChangesApplied = false;
+                    singleRaceStarted = false;
                     jumpShouldBeEnabled = false;
                     wingsShouldBeEnabled = false;
                     jetsShouldBeEnabled = false;
@@ -154,8 +156,10 @@ namespace DistanceRando
             Events.GameMode.Go.Subscribe((data) =>
             {
                 Console.WriteLine("Start/Load event fired");
+                Console.WriteLine($"Rando game started? {started}");
                 if (started)
                 {
+                    Console.WriteLine($"Rando changes applied? {randoChangesApplied}");
                     if (!randoChangesApplied)
                     {
                         Console.WriteLine(randoChangesApplied);
