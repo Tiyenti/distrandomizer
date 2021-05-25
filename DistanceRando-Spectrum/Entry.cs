@@ -12,6 +12,7 @@ using System.IO;
 using System.Reflection;
 using System.Diagnostics;
 using Reactor.API.Logging;
+using Reactor.API.Storage;
 
 using Centrifuge.Distance.Game;
 
@@ -123,6 +124,18 @@ namespace DistanceRando
                     else
                     {
                         startGame = false;
+                    }
+                }
+            });
+
+            Events.GameMode.ModeStarted.Subscribe((data) =>
+            {
+                // pre start stuff
+                if (started)
+                {
+                    foreach (var obj in FindObjectsOfType<WingCorruptionZone>())
+                    {
+                        Destroy(obj.gameObject);
                     }
                 }
             });
