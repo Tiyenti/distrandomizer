@@ -140,6 +140,17 @@ namespace DistanceRando
                 }
             });
 
+            Events.Level.PostLoad.Subscribe((data) =>
+            {
+                if (started)
+                {
+                    foreach (var obj in FindObjectsOfType<AdventureSpecialIntro>())
+                    {
+                        Destroy(obj.gameObject);
+                    }
+                }
+            });
+
             Events.GameMode.Go.Subscribe((data) =>
             {
                 Console.WriteLine("Start/Load event fired");
