@@ -22,6 +22,8 @@ namespace DistanceRando
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
+        const string randomizerVersion = "1.0-alpha1";
+
         bool started = false;
         bool startGame = false;
         bool singleRaceStarted = false;
@@ -84,8 +86,8 @@ namespace DistanceRando
                                         "Start the [FF0000]Instantiation[-] map in Adventure mode to begin.", "Rando enabled");
                                     startGame = true;
                                     Game.WatermarkText =
-                                        $"RANDOMIZER ENABLED - SEED: {inputSeed}\n" +
-                                        $"RANDOMIZER {version.FileVersion}";
+                                        $"RANDOMIZER ENABLED - SEED:\n{inputSeed}\n" +
+                                        $"RANDOMIZER {randomizerVersion}";
 
                                     //manager.CheatRegistry.Enable("randomizerRun");
 
@@ -394,7 +396,7 @@ namespace DistanceRando
                 Console.WriteLine(a);
             }
 
-            while (maps.Count != 10)
+            while (maps.Count != 14)
             {
                 int index = random.Next(0, availableMaps.Count);
                 Console.WriteLine($"{availableMaps.Count} - {index}");
