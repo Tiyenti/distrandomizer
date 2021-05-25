@@ -1,0 +1,13 @@
+{
+    "FriendlyName": "Distance Randomizer",
+    "Description": "Shuffles maps and abilities in Adventure mode.",
+    "Author": "Tiyenti",
+    "Contact": "Discord: Tiyenti#3201 | Twitter: @TiyentiSR",
+    "ModuleFileName": "DistanceRando.Plugin.dll",
+    "Priority": 10,
+    "SkipLoad": false,
+    "Dependencies": [],
+    "RequiredGSLs": [
+      "com.github.reherc/Centrifuge.Distance"
+    ]
+  }
