@@ -11,13 +11,14 @@ using System.IO;
 //using Spectrum.Interop.Game.Vehicle;
 using System.Reflection;
 using System.Diagnostics;
+using Reactor.API.Logging;
 
 using Centrifuge.Distance.Game;
 
 namespace DistanceRando
 {
     [ModEntryPoint("com.github.tiyenti/DistanceRando")]
-    public class Entry
+    public class Entry : MonoBehaviour
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
@@ -44,11 +45,13 @@ namespace DistanceRando
 
         public void Initialize(IManager manager)
         {
-
+            DontDestroyOnLoad(this);
         }
 
-        public void LateInitialize(IManager manager, string ipcIdentifier)
+        public void LateInitialize(IManager manager)
         {
+            Console.WriteLine("Late Initialize!");
+
             Events.MainMenu.Initialized.Subscribe((data) =>
             {
                 if (firstMainMenuLoad)
