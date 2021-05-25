@@ -285,6 +285,20 @@ namespace DistanceRando
                 GameObject.Destroy(obj.gameObject);
             }
 
+            // remove warpanchor cutscenes but keep all warpanchors present in arcade mode
+            // (this could allow for abyss to unlock an ability)
+            foreach (var obj in FindObjectsOfType<WarpAnchor>())
+            {
+                if (obj.ignoreInArcade_)
+                {
+                    GameObject.Destroy(obj.gameObject);
+                }
+                else if (obj.ignoreInAdventure_)
+                {
+                    obj.ignoreInAdventure_ = false;
+                }
+            }
+
             if (map.abilityEnabled != Ability.None)
             {
                 Console.WriteLine($"enables {map.abilityEnabled.ToString()}");
