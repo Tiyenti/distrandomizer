@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Spectrum.API;
-using Spectrum.API.Interfaces.Systems;
-using Spectrum.API.Interfaces.Plugins;
+using Reactor.API;
+using Reactor.API.Attributes;
+using Reactor.API.Interfaces.Systems;
+//using Reactor.API.Interfaces.Plugins;
 using UnityEngine;
-using Spectrum.Interop.Game;
+//using Spectrum.Interop.Game;
 using System.IO;
-using Spectrum.Interop.Game.Vehicle;
+//using Spectrum.Interop.Game.Vehicle;
 using System.Reflection;
 using System.Diagnostics;
 
+using Centrifuge.Distance.Game;
+
 namespace DistanceRando
 {
-    
-    public class Entry : IPlugin
+    [ModEntryPoint("com.github.tiyenti/DistanceRando")]
+    public class Entry
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
@@ -39,9 +42,14 @@ namespace DistanceRando
 
         bool randoChangesApplied = false;
 
-        public void Initialize(IManager manager, string ipcIdentifier)
+        public void Initialize(IManager manager)
         {
-            MainMenu.Loaded += (sender, args) =>
+
+        }
+
+        public void LateInitialize(IManager manager, string ipcIdentifier)
+        {
+            Events.MainMenu.Initialized.Subscribe((data) =>
             {
                 if (firstMainMenuLoad)
                 {
@@ -74,10 +82,10 @@ namespace DistanceRando
                                     startGame = true;
                                     Game.WatermarkText =
                                         $"RANDOMIZER ENABLED - SEED: {inputSeed}\n" +
-                                        $"DISTANCE {SystemVersion.DistanceBuild} - RANDOMIZER {version.FileVersion}";
+                                        $"RANDOMIZER {version.FileVersion}";
 
-                                    manager.CheatRegistry.Enable("randomizerRun");                                   
-                                    
+                                    //manager.CheatRegistry.Enable("randomizerRun");
+
                                 });
                             }
                         }
@@ -91,12 +99,12 @@ namespace DistanceRando
                     jumpShouldBeEnabled = false;
                     wingsShouldBeEnabled = false;
                     jetsShouldBeEnabled = false;
-                    manager.CheatRegistry.Disable("randomizerRun");
+                    //manager.CheatRegistry.Disable("randomizerRun");
                     availableMaps = new List<string>(){ "Cataclysm", "Diversion", "Euphoria", "Entanglement", "Automation",
                                                 "Abyss", "Embers", "Isolation", "Repulsion", "Compression", "Research", "Contagion",
                                                 "Overload", "Ascension"};
                 }
-            };
+            });
 
             Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) => {
                 // Yes. We are intercepting a map load. I know it's bad, but this is the only way to get this to work I could find :P
@@ -114,7 +122,7 @@ namespace DistanceRando
                 }
             });
 
-            Race.Started += (sender, args) =>
+            Events.GameMode.Go.Subscribe((data) =>
             {
                 Console.WriteLine("Start/Load event fired");
                 if (started)
@@ -131,9 +139,9 @@ namespace DistanceRando
                     Console.WriteLine("Start event fired 2");
                     Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
                 }
-            };
+            });
 
-            Race.Finished += (sender, args) =>
+            Events.ServerToClient.ModeFinished.Subscribe((data) =>
             {
                 Console.WriteLine("Finish event fired");
                 if (started)
@@ -141,64 +149,71 @@ namespace DistanceRando
                     singleRaceStarted = false;
                     randoChangesApplied = false;
                 }
-            };
+            });
 
-            LocalVehicle.Exploded += (sender, args) =>
+            Events.Car.Explode.SubscribeAll((sender, data) =>
             {
-                if (started)
+                if (sender.GetComponent<PlayerDataLocal>())
                 {
-                    RandoMap map = maps[Game.LevelName];
-                    CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                    if (car.Jump_.AbilityEnabled_ && !map.jumpEnabled)
-                    {
-                        jumpShouldBeEnabled = true;
-                    }
-                    if (car.Wings_.AbilityEnabled_ && !map.wingsEnabled)
-                    {
-                        wingsShouldBeEnabled = true;
-                    }
-                    if (car.Jets_.AbilityEnabled_ && !map.jetsEnabled)
-                    {
-                        jetsShouldBeEnabled = true;
-                    }
-                }
-            };
-
-            LocalVehicle.Respawned += (sender, args) =>
-            {
-                if (started)
-                {
-                    Console.WriteLine("Respawn event fired");
-                    CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                    try
+                    if (started)
                     {
                         RandoMap map = maps[Game.LevelName];
-                        if (!singleRaceStarted)
+                        CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
+                        if (car.Jump_.AbilityEnabled_ && !map.jumpEnabled)
                         {
-                            jumpShouldBeEnabled = map.jumpEnabled;
-                            wingsShouldBeEnabled = map.wingsEnabled;
-                            jetsShouldBeEnabled = map.jetsEnabled;
+                            jumpShouldBeEnabled = true;
                         }
-                        car.Boost_.AbilityEnabled_ = map.boostEnabled;
-                        car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
-                        car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
-                        car.Jets_.AbilityEnabled_ = jetsShouldBeEnabled;
-                        Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
-
+                        if (car.Wings_.AbilityEnabled_ && !map.wingsEnabled)
+                        {
+                            wingsShouldBeEnabled = true;
+                        }
+                        if (car.Jets_.AbilityEnabled_ && !map.jetsEnabled)
+                        {
+                            jetsShouldBeEnabled = true;
+                        }
                     }
-                    catch (KeyNotFoundException)
-                    {
-                        // this should only ever happen on Credits or Destination Unknown, so just enable everything
-                        car.Boost_.AbilityEnabled_ = true;
-                        car.Jump_.AbilityEnabled_ = true;
-                        car.Wings_.AbilityEnabled_ = true;
-                        car.Jets_.AbilityEnabled_ = true;
-                    }
-
-                    //car.GetComponent<HornGadget>().enabled = true;
-                    car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
                 }
-            };
+            }
+            );
+
+            Events.Player.CarRespawn.SubscribeAll((sender, data) =>
+            {
+                if (sender.GetComponent<PlayerDataLocal>())
+                {
+                    if (started)
+                    {
+                        Console.WriteLine("Respawn event fired");
+                        CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
+                        try
+                        {
+                            RandoMap map = maps[Game.LevelName];
+                            if (!singleRaceStarted)
+                            {
+                                jumpShouldBeEnabled = map.jumpEnabled;
+                                wingsShouldBeEnabled = map.wingsEnabled;
+                                jetsShouldBeEnabled = map.jetsEnabled;
+                            }
+                            car.Boost_.AbilityEnabled_ = map.boostEnabled;
+                            car.Jump_.AbilityEnabled_ = jumpShouldBeEnabled;
+                            car.Wings_.AbilityEnabled_ = wingsShouldBeEnabled;
+                            car.Jets_.AbilityEnabled_ = jetsShouldBeEnabled;
+                            Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
+
+                        }
+                        catch (KeyNotFoundException)
+                        {
+                            // this should only ever happen on Credits or Destination Unknown, so just enable everything
+                            car.Boost_.AbilityEnabled_ = true;
+                            car.Jump_.AbilityEnabled_ = true;
+                            car.Wings_.AbilityEnabled_ = true;
+                            car.Jets_.AbilityEnabled_ = true;
+                        }
+
+                        //car.GetComponent<HornGadget>().enabled = true;
+                        car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
+                    }
+                }
+            });
 
             
         }
