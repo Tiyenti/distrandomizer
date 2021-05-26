@@ -159,11 +159,19 @@ namespace DistanceRando
                         {
                             if (obj.ignoreInArcade_)
                             {
-                                obj.ignoreInArcade_ = true;
+                                obj.ignoreInAdventure_ = true;
                             }
                             else if (obj.ignoreInAdventure_)
                             {
                                 obj.ignoreInAdventure_ = false;
+                            }
+                        }
+
+                        foreach (var obj in FindObjectsOfType<GlitchFieldLogic>())
+                        {
+                            if (obj.ignoreInArcade_)
+                            {
+                                Destroy(obj.gameObject);
                             }
                         }
                     }
