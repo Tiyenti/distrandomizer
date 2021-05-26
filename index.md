@@ -14,7 +14,7 @@ is designed, so keep that in mind!
 Later on, I plan to expand the randomizer with additional settings and other nice features such as a hashing system to more easily
 confirm everyone is on the same seed in a race scenario, but what I have now is complete enough for an early alpha release.
 
-[Click here to download the mod!](https://github.com/tiyenti/distrandomizer/releases)
+## [Click here to download the mod!](https://github.com/tiyenti/distrandomizer/releases)
 
 ## Differences to the normal Adventure mode
 
@@ -34,4 +34,4 @@ Skipping ability triggers will still give you the ability you would have gotten 
 
 ## Other info
 If you're streaming the game and would like a tracker for the benefit of your viewers (or even just to keep track of things more easily yourself), I have a simple tracker website available at
-[https://tiyenti.github.io/disttracker] that will suffice for this purpose. This is by no means necessary but it exists if you want to use it.
+[https://tiyenti.github.io/disttracker](https://tiyenti.github.io/disttracker) that will suffice for this purpose. This is by no means necessary but it exists if you want to use it.
