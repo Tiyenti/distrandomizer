@@ -14,7 +14,7 @@ is designed, so keep that in mind!
 Later on, I plan to expand the randomizer with additional settings and other nice features such as a hashing system to more easily
 confirm everyone is on the same seed in a race scenario, but what I have now is complete enough for an early alpha release.
 
-[https://github.com/tiyenti/distrandomizer/releases](Click here to download the mod!)
+[Click here to download the mod!](https://github.com/tiyenti/distrandomizer/releases)
 
 ## Differences to the normal Adventure mode
 
