@@ -150,6 +150,23 @@ namespace DistanceRando
                     {
                         Destroy(obj.gameObject);
                     }
+
+                    if (!(Game.LevelName == "Enemy" || Game.LevelName == "Credits"))
+                    {
+                        // remove warpanchor cutscenes but keep all warpanchors present in arcade mode
+                        // (this could allow for abyss to unlock an ability)
+                        foreach (var obj in FindObjectsOfType<WarpAnchor>())
+                        {
+                            if (obj.ignoreInArcade_)
+                            {
+                                obj.ignoreInArcade_ = true;
+                            }
+                            else if (obj.ignoreInAdventure_)
+                            {
+                                obj.ignoreInAdventure_ = false;
+                            }
+                        }
+                    }
                 }
             });
 
@@ -311,20 +328,6 @@ namespace DistanceRando
             foreach (var obj in UnityEngine.Object.FindObjectsOfType<AdventureAbilitySettings>())
             {
                 GameObject.Destroy(obj.gameObject);
-            }
-
-            // remove warpanchor cutscenes but keep all warpanchors present in arcade mode
-            // (this could allow for abyss to unlock an ability)
-            foreach (var obj in FindObjectsOfType<WarpAnchor>())
-            {
-                if (obj.ignoreInArcade_)
-                {
-                    GameObject.Destroy(obj.gameObject);
-                }
-                else if (obj.ignoreInAdventure_)
-                {
-                    obj.ignoreInAdventure_ = false;
-                }
             }
 
             if (map.abilityEnabled != Ability.None)
@@ -668,7 +671,7 @@ namespace DistanceRando
                 // Abyss can actually be beaten with ony jump, and therefore could be JumpOrFlight, but 
                 // you need to go through the tunnel for that to work. Since that's currently a softlock on the randomizer,
                 // we require flight for the time being.
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpOrFlight);
             }
             else if (name == "Embers")
             {
