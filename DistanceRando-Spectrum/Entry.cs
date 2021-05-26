@@ -548,20 +548,26 @@ namespace DistanceRando
                     {
                         if (!isJumpEnabled && logicInfo.abilityCompleteRequirement == AbilityRequirement.Jump)
                         {
-                            Console.WriteLine($"no jump");
+                            Console.WriteLine($"didn't add! map needs jump, and it is not enabled");
                             // can't complete the map, no jump
                             continue;
                         }
                         else if (!canFly && logicInfo.abilityCompleteRequirement == AbilityRequirement.WingsJets)
                         {
-                            Console.WriteLine($"no flight");
+                            Console.WriteLine($"didn't add! map needs flight, and wings/jets are not enabled");
                             // can't complete the map, no flight
                             continue;
                         }
                         else if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled)))
                         {
                             // nope move along
-                            Console.WriteLine($"no jump or flight");
+                            Console.WriteLine($"didn't add! map needs jump AND flight, and one or both are not enabled");
+                            continue;
+                        }
+                        else if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpOrFlight && !(canFly || isJumpEnabled)))
+                        {
+                            // nope move along
+                            Console.WriteLine($"didn't add! map needs jump OR flight, and neither are enabled");
                             continue;
                         }
                         else
@@ -620,7 +626,7 @@ namespace DistanceRando
         }
     }
 
-    public enum AbilityRequirement { None, Jump, WingsJets, JumpWingsJets }
+    public enum AbilityRequirement { None, Jump, WingsJets, JumpWingsJets, JumpOrFlight }
 
     public class MapLogicInfo
     {
@@ -647,7 +653,7 @@ namespace DistanceRando
             }
             else if (name == "Euphoria")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.Jump);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpOrFlight);
             }
             else if (name == "Entanglement")
             {
@@ -659,19 +665,22 @@ namespace DistanceRando
             }
             else if (name == "Abyss")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                // Abyss can actually be beaten with ony jump, and therefore could be JumpOrFlight, but 
+                // you need to go through the tunnel for that to work. Since that's currently a softlock on the randomizer,
+                // we require flight for the time being.
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
             }
             else if (name == "Embers")
             {
-                return new MapLogicInfo(true, AbilityRequirement.WingsJets, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(true, AbilityRequirement.WingsJets, AbilityRequirement.WingsJets);
             }
             else if (name == "Isolation")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
             }
             else if (name == "Repulsion")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
             }
             else if (name == "Compression")
             {
@@ -683,11 +692,11 @@ namespace DistanceRando
             }
             else if (name == "Contagion")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
             }
             else if (name == "Overload")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
             }
             else if (name == "Ascension")
             {
