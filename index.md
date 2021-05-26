@@ -24,7 +24,7 @@ confirm everyone is on the same seed in a race scenario, but what I have now is 
 * Tutorial text and WarpAnchor cutscenes have been removed
 
 ## How to play
-In order to play randomizer games you will need to install the plugin, as well as the Centrifuge modding system. Please see the [install page](/install) for instructions on how to do this if you're not sure.
+In order to play randomizer games you will need to install the plugin, as well as the Centrifuge modding system. Please see the [install page](install) for instructions on how to do this if you're not sure.
 
 Once you have installed Centrifuge and the randomizer plugin, you're ready to go. Press `R` on the main menu to open up the seed entry prompt. You can either use a specific seed, or leave the field blank to generate a random seed. If you're doing a race, I'd recommend making everybody use the same seed to keep things fair. Once you've entered the seed you want, press Enter - this will set the seed and prime randomizer. Once you're ready to start the game, go into the Adventure menu and start from Instantiation. The rando game will then be generated, allowing you to actually play it. If you decide you don't want to play rando after all, loading any map except the intro will cancel the rando game.
 
