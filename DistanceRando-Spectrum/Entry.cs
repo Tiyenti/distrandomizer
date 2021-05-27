@@ -118,10 +118,7 @@ namespace DistanceRando
                 }
                 else
                 {
-                    print($"[RANDOMIZER] End randomizer game!");
-                    print($"Seed: {seed}");
-                    print($"Friendly hash: {FriendlyHash(seedHash)}");
-                    print($"SHA256: {seedHash.Truncate(7)}");
+                    print($"[RANDOMIZER] End randomizer game! - Seed: {seed} - Friendly hash: {FriendlyHash(seedHash)} - SHA256: {seedHash.Truncate(7)}");
 
                     ResetValues();
                 }
@@ -411,10 +408,7 @@ namespace DistanceRando
 
         void StartRandoGame()
         {
-            print("[RANDOMIZER] Started randomizer game!");
-            print($"Seed: {seed}");
-            print($"Friendly hash: {FriendlyHash(seedHash)}");
-            print($"SHA256: {seedHash.Truncate(7)}");
+            print($"[RANDOMIZER] Started randomizer game! - Seed: {seed} - Friendly hash: {FriendlyHash(seedHash)} - SHA256: {seedHash.Truncate(7)}");
 
             Console.WriteLine(maps.Count);
 
