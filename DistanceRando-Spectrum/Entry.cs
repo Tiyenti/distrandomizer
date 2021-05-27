@@ -118,7 +118,11 @@ namespace DistanceRando
                 }
                 else
                 {
-                    print($"[RANDOMIZER] End randomizer game with hash {FriendlyHash(seedHash)} ({seedHash.Truncate(7)})");
+                    print($"[RANDOMIZER] End randomizer game!");
+                    print($"Seed: {seed}");
+                    print($"Friendly hash: {FriendlyHash(seedHash)}");
+                    print($"SHA256: {seedHash.Truncate(7)}");
+
                     ResetValues();
                 }
             });
