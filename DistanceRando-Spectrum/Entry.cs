@@ -88,11 +88,11 @@ namespace DistanceRando
                                     {
                                         try
                                         {
-                                            seed = int.Parse(inputSeed);
+                                            seed = int.Parse(inputSeed.Trim());
                                         }
                                         catch (FormatException)
                                         {
-                                            seed = inputSeed.GetHashCode();
+                                            seed = inputSeed.Trim().GetHashCode();
                                         }
                                     }
                                     G.Sys.MenuPanelManager_.Pop();
