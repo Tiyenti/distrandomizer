@@ -70,9 +70,9 @@ namespace DistanceRando
                             if (startGame)
                             {
                                 G.Sys.MenuPanelManager_.ShowError($"Adventure Randomizer {randomizerVersion}\n\n" +
-                                                                    $"Seed hash: [FF0000]{FriendlyHash(seedHash)}[-]\n" +
-                                                                    $"({seedHash.Truncate(7)})\n\nStart the [FF0000]Instantiation[-] map in Adventure mode to begin.",
-                                                                    "Randomizer Config");
+                                                                $"Seed hash: [FF0000]{FriendlyHash(seedHash)}[-]\n" +
+                                                                $"({seedHash.Truncate(7)})\n\nStart the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.",
+                                                                "Randomizer Config");
                                 return;
                             }
 
@@ -96,13 +96,15 @@ namespace DistanceRando
                                         }
                                     }
                                     G.Sys.MenuPanelManager_.Pop();
-                                    G.Sys.MenuPanelManager_.ShowTimedOk(10, $"Rando seed has been set to:\n[FF0000]{inputSeed}[-]\n" +
-                                        "Start the [FF0000]Instantiation[-] map in Adventure mode to begin.", "Rando enabled");
 
                                     // Generate randomizer settings
                                     Randomize();
 
                                     seedHash = GenerateSeedHash(randomizerVersion, maps);
+
+                                    G.Sys.MenuPanelManager_.ShowError($"Rando seed has been set to:\n[FF0000]{inputSeed}[-]\n\n" +
+                                        $"Hash: [FF0000]{FriendlyHash(seedHash)}[-]\n({seedHash.Truncate(7)})\n\n" +
+                                        "Start the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.", "Rando enabled");
 
                                     startGame = true;
                                     Game.WatermarkText =
