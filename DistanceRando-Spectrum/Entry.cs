@@ -15,6 +15,7 @@ using Reactor.API.Logging;
 using Reactor.API.Storage;
 
 using Centrifuge.Distance.Game;
+using System.Security.Cryptography;
 
 namespace DistanceRando
 {
@@ -23,7 +24,7 @@ namespace DistanceRando
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
-        const string randomizerVersion = "1.0-alpha1";
+        const string randomizerVersion = "1.0-indev1";
 
         bool started = false;
         bool startGame = false;
@@ -46,6 +47,8 @@ namespace DistanceRando
 
         bool randoChangesApplied = false;
 
+        string seedHash = "";
+
         public void Initialize(IManager manager)
         {
             DontDestroyOnLoad(this);
@@ -63,6 +66,16 @@ namespace DistanceRando
                     manager.Hotkeys.Bind("R", () => {
                         if (Game.SceneName == "MainMenu" && G.Sys.GameManager_.SoloAndNotOnline_)
                         {
+                            // if prepped to start, show randomizer settings
+                            if (startGame)
+                            {
+                                G.Sys.MenuPanelManager_.ShowError($"Adventure Randomizer {randomizerVersion}\n\n" +
+                                                                    $"Seed hash: [FF0000]{FriendlyHash(seedHash)}[-]\n" +
+                                                                    $"({seedHash.Truncate(7)})\n\nStart the [FF0000]Instantiation[-] map in Adventure mode to begin.",
+                                                                    "Randomizer Config");
+                                return;
+                            }
+
                             if (!G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.trackmogrifyInput_.isSelected)
                             {
                                 G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.Display((inputSeed, isRandom) =>
@@ -85,10 +98,16 @@ namespace DistanceRando
                                     G.Sys.MenuPanelManager_.Pop();
                                     G.Sys.MenuPanelManager_.ShowTimedOk(10, $"Rando seed has been set to:\n[FF0000]{inputSeed}[-]\n" +
                                         "Start the [FF0000]Instantiation[-] map in Adventure mode to begin.", "Rando enabled");
+
+                                    // Generate randomizer settings
+                                    Randomize();
+
+                                    seedHash = GenerateSeedHash(randomizerVersion, maps);
+
                                     startGame = true;
                                     Game.WatermarkText =
-                                        $"RANDOMIZER ENABLED - SEED:\n{inputSeed}\n" +
-                                        $"RANDOMIZER {randomizerVersion}";
+                                        $"ADVENTURE RANDOMIZER {randomizerVersion}\n{FriendlyHash(seedHash)}\n({seedHash.Truncate(7)})\n";
+
 
                                     //manager.CheatRegistry.Enable("randomizerRun");
 
@@ -99,18 +118,8 @@ namespace DistanceRando
                 }
                 else
                 {
-                    maps = new Dictionary<string, RandoMap>();
-                    started = false;
-                    startGame = false;
-                    randoChangesApplied = false;
-                    singleRaceStarted = false;
-                    jumpShouldBeEnabled = false;
-                    wingsShouldBeEnabled = false;
-                    jetsShouldBeEnabled = false;
-                    //manager.CheatRegistry.Disable("randomizerRun");
-                    availableMaps = new List<string>(){ "Cataclysm", "Diversion", "Euphoria", "Entanglement", "Automation",
-                                                "Abyss", "Embers", "Isolation", "Repulsion", "Compression", "Research", "Contagion",
-                                                "Overload", "Ascension"};
+                    print($"[RANDOMIZER] End randomizer game with hash {FriendlyHash(seedHash)} ({seedHash.Truncate(7)})");
+                    ResetValues();
                 }
             });
 
@@ -125,7 +134,9 @@ namespace DistanceRando
                     }
                     else
                     {
+                        Console.WriteLine("rando game cancelled");
                         startGame = false;
+                        ResetValues();
                     }
                 }
             });
@@ -281,6 +292,22 @@ namespace DistanceRando
 
         }
 
+        void ResetValues()
+        {
+            maps = new Dictionary<string, RandoMap>();
+            started = false;
+            startGame = false;
+            randoChangesApplied = false;
+            singleRaceStarted = false;
+            jumpShouldBeEnabled = false;
+            wingsShouldBeEnabled = false;
+            jetsShouldBeEnabled = false;
+            //manager.CheatRegistry.Disable("randomizerRun");
+            availableMaps = new List<string>(){ "Cataclysm", "Diversion", "Euphoria", "Entanglement", "Automation",
+                                                "Abyss", "Embers", "Isolation", "Repulsion", "Compression", "Research", "Contagion",
+                                                "Overload", "Ascension"};
+        }
+
         void DisableAbilities()
         {
             RandoMap map = maps[Game.LevelName];
@@ -380,7 +407,10 @@ namespace DistanceRando
 
         void StartRandoGame()
         {
-            Randomize();
+            print("[RANDOMIZER] Started randomizer game!");
+            print($"Seed: {seed}");
+            print($"Friendly hash: {FriendlyHash(seedHash)}");
+            print($"SHA256: {seedHash.Truncate(7)}");
 
             Console.WriteLine(maps.Count);
 
@@ -609,6 +639,73 @@ namespace DistanceRando
         void LoadSeed()
         {
 
+        }
+
+        string GenerateSeedHash(string version, Dictionary<string, RandoMap> mapList)
+        {
+            string mapsString = "";
+            foreach (var map in mapList)
+            {
+                mapsString += map.Key +
+                            map.Value.abilityEnabled +
+                            map.Value.boostEnabled +
+                            map.Value.jumpEnabled +
+                            map.Value.wingsEnabled +
+                            map.Value.jetsEnabled;
+            }
+
+            byte[] hashBytes = System.Text.Encoding.UTF8.GetBytes(version + mapsString);
+
+            //string hash = "";
+
+            System.Text.StringBuilder strBuilder = new System.Text.StringBuilder();
+
+            using (SHA256 sha = SHA256.Create())
+            {
+                byte[] hash = sha.ComputeHash(hashBytes);
+
+                foreach (var b in hash)
+                {
+                    strBuilder.Append(b.ToString("x2"));
+                }
+            }
+
+            return strBuilder.ToString();
+        }
+
+        string FriendlyHash(string hash)
+        {
+
+            Dictionary<char, string> friendlyHashWords = new Dictionary<char, string>()
+            {
+                {'a', "Archaic"}, {'b', "Boost"}, {'c', "Catalyst"}, {'d', "Diamond"},
+                {'e', "Encryptor"}, {'f', "Dropper"}, {'g', "Grip"}, {'h', "Archive"},
+                {'i', "Interceptor"}, {'j', "Jump"}, {'k', "Monolith"}, {'l', "Laser"},
+                {'m', "Medal"}, {'n', "Nitronic"}, {'o', "Overheat"}, {'p', "Checkpoint"},
+                {'q', "Quarantine"}, {'r', "Resonance"}, {'s', "Spectrum"}, {'t', "Teleporter"},
+                {'u', "Corruption"}, {'v', "Virus"}, {'w', "Wings"}, {'x', "CORE"}, {'y', "Ascension"},
+                {'z', "Zenith"},
+                {'0', "Terminus"}, {'1', "Adventure"},  {'2', "Skuttle"}, {'3', "Nexus"}, {'4', "Repulsion"},
+                {'5', "Euphoria"}, {'6', "Thrusters"}, {'7', "Rooftops"}, {'8', "Enemy"}, {'9', "Continuum"}
+            };
+
+            string truncHash = hash.ToLowerInvariant().Truncate(5);
+
+            string friendlyHash = "";
+
+            foreach (char l in truncHash)
+            {
+                try
+                {
+                    friendlyHash += $"{friendlyHashWords[l]} ";
+                }
+                catch (KeyNotFoundException)
+                {
+                    friendlyHash += $"{l} ";
+                }
+            }
+
+            return friendlyHash;
         }
     }
 
