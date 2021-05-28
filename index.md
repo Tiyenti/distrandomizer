@@ -18,10 +18,15 @@ on player preference.
 
 ## Differences to the normal Adventure mode
 
-* All abilites and maps have been re-arranged into a random order for a unique playthrough each time
+* All abilites and maps* have been re-arranged into a random order for a unique playthrough each time
 * Boost is enabled from the get go
 * All wing corruption zones have been removed to allow for even more variety
 * Tutorial text, WarpAnchor cutscenes, and ability unlock slow motion effects have been removed
+
+\* *(With the exception of Enemy and Credits, which will always appear last and in that order.)*
+
+## Demo video
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/uxEWn9xq-mc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ## How to play
 In order to play randomizer games you will need to install the plugin, as well as the Centrifuge modding system. Please see the [install page](install) for instructions on how to do this if you're not sure.
