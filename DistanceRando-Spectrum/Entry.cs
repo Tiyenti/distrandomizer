@@ -102,7 +102,7 @@ namespace DistanceRando
 
                                     seedHash = GenerateSeedHash(randomizerVersion, maps);
 
-                                    G.Sys.MenuPanelManager_.ShowError($"Rando seed has been set to:\n[FF0000]{inputSeed}[-]\n\n" +
+                                    G.Sys.MenuPanelManager_.ShowError($"Rando seed has been set to:\n[FF0000]{inputSeed.Trim()}[-]\n\n" +
                                         $"Hash: [FF0000]{FriendlyHash(seedHash)}[-]\n({seedHash.Truncate(7)})\n\n" +
                                         "Start the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.", "Rando enabled");
 
