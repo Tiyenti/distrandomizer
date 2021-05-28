@@ -24,7 +24,7 @@ namespace DistanceRando
     {
         Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
-        const string randomizerVersion = "1.0-indev1";
+        const string randomizerVersion = "1.0-alpha1";
 
         bool started = false;
         bool startGame = false;
@@ -286,8 +286,6 @@ namespace DistanceRando
                     }
                 }
             });
-
-            
         }
 
         public void Shutdown()
@@ -376,33 +374,47 @@ namespace DistanceRando
 
                 foreach (var trigger in triggers)
                 {
-                    if (map.abilityEnabled == Ability.Jump)
+                    if (!(trigger.visualsOnly_ || !trigger.showAbilityAlert_))
                     {
-                        trigger.enableJumping_ = true;
-                        trigger.enableFlying_ = wingsShouldBeEnabled;
-                        trigger.enableBoosting_ = true;
-                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                        // replace default triggers with a custom solution
+                        // (this is an attempt to fix shockingly inconsistent behaviour with the default triggers)
+                        // (also it lets us have progressive ability icons!! cool!!)
+                        var newTrigger = trigger.gameObject.AddComponent<RandomizerAbilityTrigger>();
+
+                        if (map.abilityEnabled == Ability.Jump)
+                        {
+                            newTrigger.enableJumping = true;
+                            newTrigger.enableFlying = wingsShouldBeEnabled;
+                            newTrigger.enableBoosting = true;
+                            newTrigger.enableJetRotating = jetsShouldBeEnabled;
+                        }
+                        else if (map.abilityEnabled == Ability.Wings)
+                        {
+                            newTrigger.enableJumping = jumpShouldBeEnabled;
+                            newTrigger.enableFlying = true;
+                            newTrigger.enableBoosting = true;
+                            newTrigger.enableJetRotating = jetsShouldBeEnabled;
+                        }
+                        else if (map.abilityEnabled == Ability.Jets)
+                        {
+                            newTrigger.enableJumping = jumpShouldBeEnabled;
+                            newTrigger.enableFlying = wingsShouldBeEnabled;
+                            newTrigger.enableBoosting = true;
+                            newTrigger.enableJetRotating = true;
+                        }
+                        else if (map.abilityEnabled == Ability.Boost)
+                        {
+                            newTrigger.enableJumping = jumpShouldBeEnabled;
+                            newTrigger.enableFlying = wingsShouldBeEnabled;
+                            newTrigger.enableBoosting = true;
+                            newTrigger.enableJetRotating = jetsShouldBeEnabled;
+                        }
+
+                        trigger.gameObject.RemoveComponent<SetAbilitiesTrigger>();
                     }
-                    else if (map.abilityEnabled == Ability.Wings)
+                    else
                     {
-                        trigger.enableJumping_ = jumpShouldBeEnabled;
-                        trigger.enableFlying_ = true;
-                        trigger.enableBoosting_ = true;
-                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
-                    }
-                    else if (map.abilityEnabled == Ability.Jets)
-                    {
-                        trigger.enableJumping_ = jumpShouldBeEnabled;
-                        trigger.enableFlying_ = wingsShouldBeEnabled;
-                        trigger.enableBoosting_ = true;
-                        trigger.enableJetRotating_ = true;
-                    }
-                    else if (map.abilityEnabled == Ability.Boost)
-                    {
-                        trigger.enableJumping_ = jumpShouldBeEnabled;
-                        trigger.enableFlying_ = wingsShouldBeEnabled;
-                        trigger.enableBoosting_ = true;
-                        trigger.enableJetRotating_ = jetsShouldBeEnabled;
+                        Destroy(trigger.gameObject);
                     }
                 }
             }
