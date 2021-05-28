@@ -427,7 +427,7 @@ namespace DistanceRando
 
                 foreach (var trigger in triggers)
                 {
-                    trigger.useSlowMo_ = false;
+                    Destroy(trigger.gameObject);
                 }
             }
         }
