@@ -11,7 +11,7 @@ as you'll likely have less abilities than you'd normally have, so completing the
 of what I currently see as being the "default" experience, although I do intend to implement more settings (such as potentailly an easier logic mode) to allow for further tweaking based
 on player preference.
 >
-> If you find any bugs or other issues, please report them on https://github.com/Tiyenti/distrandomizer/issues!
+> If you find any bugs or other issues, please report them on [issues page]!
 
 
 ## [Go here to download the latest version of mod!](https://github.com/Tiyenti/distrandomizer/releases)
@@ -39,8 +39,10 @@ Skipping ability triggers will still give you the ability you would have gotten 
 ## Other info
 * If you're streaming the game and would like a tracker for the benefit of your viewers (or even just to keep track of things more easily yourself), I have a simple tracker website available at
 [https://tiyenti.github.io/disttracker](https://tiyenti.github.io/disttracker) that will suffice for this purpose. This is by no means necessary but it exists if you want to use it.
-* As mentioned above, the randomizer is still somewhat experimental and there could be bugs. Please report any issues you find at https://github.com/Tiyenti/distrandomizer/issues!
+* As mentioned above, the randomizer is still somewhat experimental and there could be bugs. Please report any issues you find on the [issues page]!
 * The Distance Randomizer is open source. View the source code and potentially contribute at
-https://github.com/Tiyenti/distrandomizer!
+[https://github.com/Tiyenti/distrandomizer](https://github.com/Tiyenti/distrandomizer)!
 * Join the official [Distance Discord](https://discord.gg/distance) if you need any support.
 I (@Tiyenti#3201) or perhaps someone else with experience should be able to assist. 
+
+[issues page]: https://github.com/Tiyenti/distrandomizer/issues
