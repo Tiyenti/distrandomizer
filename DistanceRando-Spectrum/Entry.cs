@@ -120,7 +120,10 @@ namespace DistanceRando
                 }
                 else
                 {
-                    print($"[RANDOMIZER] End randomizer game! - Seed: {seed} - Friendly hash: {FriendlyHash(seedHash)} - SHA256: {seedHash.Truncate(7)}");
+                    if (started)
+                    {
+                        print($"[RANDOMIZER] End randomizer game! - Seed: {seed} - Friendly hash: {FriendlyHash(seedHash)} - SHA256: {seedHash.Truncate(7)}");
+                    }
 
                     ResetValues();
                 }
@@ -416,6 +419,15 @@ namespace DistanceRando
                     {
                         Destroy(trigger.gameObject);
                     }
+                }
+            }
+            else
+            {
+                SetAbilitiesTrigger[] triggers = GameObject.FindObjectsOfType<SetAbilitiesTrigger>();
+
+                foreach (var trigger in triggers)
+                {
+                    trigger.useSlowMo_ = false;
                 }
             }
         }
