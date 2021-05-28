@@ -1,4 +1,5 @@
 ---
+title: Install distrandomizer
 ---
 ## Install distrandomizer
 
@@ -12,7 +13,7 @@
       `Distance/Distance_Data/Centrifuge/GameSupport` directory.
 3. Next you can install the Distance Randomizer plugin itself.
    1. Download the latest version of the Randomizer mod [here].
-   2. Extract the `DistanceRando` folder inside of `distrandomizer.zip` to the
+   2. Extract the `DistanceRando` folder inside of `DistanceRando-[version].zip` to the
       `Distance/Distance_Data/Centrifuge/Mods` directory.
 4. You should be done. Run the game, press `R` on the main menu, enter a seed, then
    start on Instantiation to begin your randomzied adventures.
