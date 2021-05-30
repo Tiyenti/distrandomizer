@@ -1,9 +1,9 @@
-﻿using System;
+﻿// Custom ability trigger to fix the wacky incosistent behaviour of stock SetAbilitiesTriggers
+// (also allows for more flexibility for potential additions such as ~custom~ abilities?)
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-// Custom ability trigger to fix the wacky incosistent behaviour of stock SetAbilitiesTriggers
-// (also allows for more flexibility)
-
 using System.Text;
 using UnityEngine;
 using Centrifuge.Distance.Game;
