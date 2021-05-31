@@ -20,8 +20,8 @@ namespace DistanceRando
     {
         RandoGame randoGame = null;
 
-        const string randomizerVersion = "1.0-alpha1";
-        const string logicVersion = "1.0-alpha1";
+        readonly string randomizerVersion = "1.0-alpha1";
+        readonly string logicVersion = "1.0-alpha1";
 
         bool started = false;
         bool startGame = false;
@@ -63,10 +63,6 @@ namespace DistanceRando
                                 G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.Display((inputSeed, isRandom) =>
                                 {
                                     var usedSeed = inputSeed;
-                                    if (isRandom)
-                                    {
-                                        usedSeed = new System.Random().Next(0, int.MaxValue).ToString();
-                                    }
 
                                     G.Sys.MenuPanelManager_.Pop();
 
