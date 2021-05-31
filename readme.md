@@ -15,7 +15,7 @@ Obviously, you will first need to clone the repo:
 
     $ git clone https://github.com/Tiyenti/distrandomizer.git
 
-You will need to provide four depdendant assemblies in order to build the project:
+You will need to provide four dependant assemblies in order to build the project:
 
 * `UnityEngine.dll` from Distance
 * `Assembly-CSharp.dll` from Distance
@@ -37,7 +37,7 @@ like the following:
 
     /
     ┕ Dependencies
-      ┕ Asseembly-CSharp.dll
+      ┕ Assembly-CSharp.dll
       ┕ Centrifuge.Distance.dll
       ┕ Reactor.API.dll
       ┕ UnityEngine.dll
@@ -46,7 +46,7 @@ like the following:
     ┕ mod.json
     ┕ ...
 
-If you are not on Windows or your Distance install is located on a differnt directory, you can either manually create the symlinks, or instead just copy the requisite .dll files into the Dependencies directory (which is, of course, an available option on Windows as well).
+If you are not on Windows or your Distance install is located on a different directory, you can either manually create the symlinks, or instead just copy the requisite .dll files into the Dependencies directory (which is, of course, an available option on Windows as well).
 
 distrandomizer is currently being developed with Visual Studio 2019 Community, so this is the reccomended IDE for developing/building the mod. Other IDE solutions may work as well
 although they are not officially supported.
