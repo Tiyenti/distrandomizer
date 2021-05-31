@@ -1,42 +1,68 @@
 # Distance Randomizer (new! now for 1.0)
-A Centrifuge plugin that randomizes Distance's Adventure mode.
+A Centrifuge plugin that randomizes Distance's Adventure mode. Almost all maps and abilities are
+shuffled into a random order, requiring you to use some interesting strategies to complete some maps due to being less equipped than the developers intended.
 
 There's now a website for the randomizer plugin at https://tiyenti.github.io/distrandomizer with more information!
 
-## Changes from the normal game
-- All maps and abilities have been rearranged into a random order.
-- Boost is enabled from the start, you don't need to pass through an ability trigger for it.
-- Wing corruption zones are no longer present to allow for more variety in the map order.
-- The majority of the tutorial text in the game has been removed, since you don't need to learn
-  how to play the game in rando.
-- Most warpanchors have been disabled/removed in order to speed up the game.
+## Installation
+The latest version of the mod can be found and downloaded from the [releases page](https://github.com/Tiyenti/distrandomizer/releases).
 
-## How to play
-In order to play randomizer games you will need to install Centrifuge, the Distance Centrifuge GSL,
-and the randomizer plugin itself. View the
-[install page](https://tiyenti.github.io/distrandomizer/install) of the randomizer mod website
-for instructions on how to install the mod if you're not sure how to do this.
+See https://tiyenti.github.io/distrandomizer/install for instructions on how to install
+the mod if you are unsure.
 
-Once you have installed Centrifuge and the randomizer plugin, you're ready to go. Press `R` on the main menu
-to open up the seed entry prompt. You can either use a specific seed, or leave the field blank to generate a
-random seed. If you're doing a race, I'd recommend making everybody use the same seed to keep things fair.
-Once you've entered the seed you want, press Enter - this will set the seed and prime randomizer.
+## Build instructions
+Obviously, you will first need to clone the repo:
 
-If you have the speedrun timer enabled, the hash of the randomizer seed will be displayed in the top right corner
-of the screen once you have enabled the randomizer; you can also view the randomizer version and seed hash by pressing `R`
-again after entering a seed. This hash value can be used to confirm that all players in a randomized race will get the same game.
+    $ git clone https://github.com/Tiyenti/distrandomizer.git
 
-Once you're ready to start the game, go into the Adventure menu and start from Instantiation. The rando game will then be generated,
-allowing you to actually play it. If you decide you don't want to play rando after all, loading any map except the intro will cancel the rando game.
+You will need to provide four depdendant assemblies in order to build the project:
 
-Obviously, since the abilities are given to you in a random order, you may not be able to complete things in the original way,
-so you'll have to use unusual strats to complete some maps. Remember that you can slam your car against walls to shove it off of
-roads without jump, and note that it's possible to drive up the arrows on some jump barriers. Sometimes you may get stuck behind
-a checkpoint; you may need to go backwards to give yourself enough room to pass it. It should be impossible to get totally stuck,
-but if that ever does happen, make sure you toss an issue my way with that seed so I can see what went wrong.
+* `UnityEngine.dll` from Distance
+* `Assembly-CSharp.dll` from Distance
+* `Reactor.API.dll` from [Centrifuge](https://github.com/Ciastex/Centrifuge)
+* `Centrifuge.Distance.dll` from the [Distance GSL for Centrifuge](https://github.com/REHERC/Centrifuge.Distance)
 
-Skipping ability triggers will still give you the ability you would have gotten in the previous map like the normal game,
-so don't be afriad to skip ability triggers in some maps in the interest of saving time.
+These four assemblies must be provided in a directory named `Dependencies` within the
+repository root. The batch file `setup_symlinks.bat` will automatically create the `Dependencies`
+directory and four symlinks to the expected locations of these files on Windows, assuming Distance is installed at `C:\Program Files (x86)\Steam\steamapps\common\Distance\Distance_Data`.
 
-If you want to keep track of the maps and abilities you've already completed/unlocked, [I've made a simple tracker](https://tiyenti.github.io/disttracker)
-that will allow you to do that.
+To run this file, open an elevated* terminal window in the project root directory and run:
+
+     # .\setup_symlinks.bat
+
+> _(* Note: If you have Developer Mode enabled in Windows 10, you shouldn't require elevated permissions to create symlinks and can run the bat file in a regular-permissions terminal.)_
+
+This should automatically create the expected directory structure, which should look something
+like the following:
+
+    /
+    ┕ Dependencies
+      ┕ Asseembly-CSharp.dll
+      ┕ Centrifuge.Distance.dll
+      ┕ Reactor.API.dll
+      ┕ UnityEngine.dll
+    ┕ DistanceRando-Spectrum
+      ┕ ...
+    ┕ mod.json
+    ┕ ...
+
+If you are not on Windows or your Distance install is located on a differnt directory, you can either manually create the symlinks, or instead just copy the requisite .dll files into the Dependencies directory (which is, of course, an available option on Windows as well).
+
+distrandomizer is currently being developed with Visual Studio 2019 Community, so this is the reccomended IDE for developing/building the mod. Other IDE solutions may work as well
+although they are not officially supported.
+
+After compiling the plugin, the resulting `DistanceRando.Plugin.dll` assembly can
+then be copied from the build directory to a new directory in the `[distance-path]/Centrifuge/Mods` directory alongside the `mod.json` manifest from the project root in the following structure:
+
+    Distance_Data/
+    ┕ Centrifuge
+      ┕ Mods
+        ┕ DistanceRando
+          ┕ DistanceRando.Plugin.dll
+          ┕ mod.json
+        ┕ ...
+      ┕ ...
+    ┕ ...
+
+From here, providing that everything is properly set up (with Centrifuge and the Distance GSL
+installed), you should be able to launch the game with the compiled plugin.
