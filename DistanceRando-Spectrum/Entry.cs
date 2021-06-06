@@ -120,6 +120,20 @@ namespace DistanceRando
                     {
                         Destroy(obj.gameObject);
                     }
+
+                    // Set map subtitle
+                    var titleObj = FindObjectOfType<LevelIntroTitleLogic>();
+
+                    int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex() + 1;
+
+                    if (titleObj)
+                    {
+                        titleObj.subtitleText_.text = $"-  MAP {curMap}/16  -";
+                    }
+                    else
+                    {
+                        print("[RANDOMIZER] title obj null");
+                    }
                 }
             });
 
@@ -127,6 +141,7 @@ namespace DistanceRando
             {
                 if (started)
                 {
+
                     foreach (var obj in FindObjectsOfType<AdventureSpecialIntro>())
                     {
                         Destroy(obj.gameObject);
