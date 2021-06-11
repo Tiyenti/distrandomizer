@@ -124,7 +124,7 @@ namespace DistanceRando
                     // Set map subtitle
                     var titleObj = FindObjectOfType<LevelIntroTitleLogic>();
 
-                    int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex() + 1;
+                    int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex();
 
                     if (titleObj)
                     {
@@ -292,7 +292,7 @@ namespace DistanceRando
                     {
                         playerDataLocal.CarScreenLogic_.StopScrensaver();
 
-                        int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex() + 1;
+                        int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex();
 
                         playerDataLocal.CarScreenLogic_.EnableAbilityBattery(abilityBatteryChanges, $"map {curMap}/16");
                         AudioManager.PostEvent("Play_OpenMap", playerDataLocal.Car_);
