@@ -426,11 +426,14 @@ namespace DistanceRando
 
             Console.WriteLine(randoGame.maps.Count);
 
-            var firstMap = randoGame.maps.First();
-            G.Sys.GameManager_.NextLevelPath_ = GetLevelPathFromName(firstMap.Key);
+            var firstMap = "Instantiation";
+            G.Sys.GameManager_.NextLevelPath_ = GetLevelPathFromName(firstMap);
             G.Sys.GameManager_.NextGameModeName_ = "Adventure";
 
             G.Sys.GameManager_.LevelPlaylist_.Clear();
+
+            G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, firstMap, GetLevelPathFromName(firstMap)));
+
             foreach (var map in randoGame.maps)
             {
                 G.Sys.GameManager_.LevelPlaylist_.Add(new LevelPlaylist.ModeAndLevelInfo(GameModeID.Adventure, map.Key, GetLevelPathFromName(map.Key)));
