@@ -16,6 +16,7 @@ namespace DistanceRando
 
         internal int seed = 0;
 
+        byte[] rawHash;
         string seedHash = "";
         internal string truncSeedHash = "";
         internal string friendlyHash = "";
@@ -36,12 +37,13 @@ namespace DistanceRando
 
             Randomize();
 
-            seedHash = GenerateSeedHash(randoVersion, maps);
+            rawHash = GenerateSeedHash(randoVersion, maps);
+            seedHash = ConvertHashToString(rawHash);
             truncSeedHash = seedHash.Truncate(7);
-            friendlyHash = FriendlyHash(truncSeedHash);
+            friendlyHash = FriendlyHash(rawHash);
         }
 
-        string GenerateSeedHash(string version, Dictionary<string, RandoMap> mapList)
+        byte[] GenerateSeedHash(string version, Dictionary<string, RandoMap> mapList)
         {
             string mapsString = "";
             foreach (var map in mapList)
@@ -57,39 +59,30 @@ namespace DistanceRando
             byte[] hashBytes = Encoding.UTF8.GetBytes(version + mapsString);
 
             //string hash = "";
-
-            StringBuilder strBuilder = new StringBuilder();
-
+            byte[] hash;
             using (SHA256 sha = SHA256.Create())
             {
-                byte[] hash = sha.ComputeHash(hashBytes);
+                hash = sha.ComputeHash(hashBytes);
+            }
 
-                foreach (var b in hash)
-                {
-                    strBuilder.Append(b.ToString("x2"));
-                }
+            return hash;
+        }
+
+        string ConvertHashToString(byte[] hash)
+        {
+            StringBuilder strBuilder = new StringBuilder();
+
+            foreach (var b in hash)
+            {
+                strBuilder.Append(b.ToString("x2"));
             }
 
             return strBuilder.ToString();
         }
 
-        string FriendlyHash(string hash)
+        string FriendlyHash(byte[] hash)
         {
-
-            Dictionary<char, string> friendlyHashWords = new Dictionary<char, string>()
-            {
-                {'a', "Archaic"}, {'b', "Boost"}, {'c', "Catalyst"}, {'d', "Diamond"},
-                {'e', "Encryptor"}, {'f', "Dropper"}, {'g', "Grip"}, {'h', "Archive"},
-                {'i', "Interceptor"}, {'j', "Jump"}, {'k', "Monolith"}, {'l', "Laser"},
-                {'m', "Medal"}, {'n', "Nitronic"}, {'o', "Overheat"}, {'p', "Checkpoint"},
-                {'q', "Quarantine"}, {'r', "Resonance"}, {'s', "Spectrum"}, {'t', "Teleporter"},
-                {'u', "Corruption"}, {'v', "Virus"}, {'w', "Wings"}, {'x', "CORE"}, {'y', "Ascension"},
-                {'z', "Zenith"},
-                {'0', "Terminus"}, {'1', "Adventure"},  {'2', "Skuttle"}, {'3', "Nexus"}, {'4', "Repulsion"},
-                {'5', "Euphoria"}, {'6', "Thrusters"}, {'7', "Rooftops"}, {'8', "Enemy"}, {'9', "Continuum"}
-            };
-
-            string truncHash = hash.ToLowerInvariant().Truncate(5);
+            string truncHash = Convert.ToBase64String(hash).Truncate(4);
 
             string friendlyHash = "";
 
@@ -97,7 +90,7 @@ namespace DistanceRando
             {
                 try
                 {
-                    friendlyHash += $"{friendlyHashWords[l]} ";
+                    friendlyHash += $"{Metadata.FriendlyHashWords[l]} ";
                 }
                 catch (KeyNotFoundException)
                 {

@@ -20,9 +20,6 @@ namespace DistanceRando
     {
         RandoGame randoGame = null;
 
-        readonly string randomizerVersion = "1.0-alpha2-dev";
-        readonly string logicVersion = "1.0-alpha1";
-
         bool started = false;
         bool startGame = false;
         bool singleRaceStarted = false;
@@ -51,7 +48,7 @@ namespace DistanceRando
                             // if prepped to start, show randomizer settings
                             if (startGame)
                             {
-                                G.Sys.MenuPanelManager_.ShowError($"Adventure Randomizer {randomizerVersion}\n\n" +
+                                G.Sys.MenuPanelManager_.ShowError($"Adventure Randomizer {Metadata.RandomizerVersion}\n\n" +
                                                                 $"Seed hash: [FF0000]{randoGame.friendlyHash}[-]\n" +
                                                                 $"({randoGame.truncSeedHash})\n\nStart the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.",
                                                                 "Randomizer Config");
@@ -67,7 +64,7 @@ namespace DistanceRando
                                     G.Sys.MenuPanelManager_.Pop();
 
                                     // Generate randomizer settings
-                                    randoGame = new RandoGame(usedSeed, logicVersion);
+                                    randoGame = new RandoGame(usedSeed, Metadata.LogicVersion);
 
                                     G.Sys.MenuPanelManager_.ShowError($"Rando seed has been set to:\n[FF0000]{inputSeed.Trim()}[-]\n\n" +
                                         $"Hash: [FF0000]{randoGame.friendlyHash}[-]\n({randoGame.truncSeedHash})\n\n" +
@@ -75,7 +72,7 @@ namespace DistanceRando
 
                                     startGame = true;
                                     Game.WatermarkText =
-                                        $"ADVENTURE RANDOMIZER {randomizerVersion}\n{randoGame.friendlyHash}\n({randoGame.truncSeedHash})\n";
+                                        $"ADVENTURE RANDOMIZER {Metadata.RandomizerVersion}\n{randoGame.friendlyHash}\n({randoGame.truncSeedHash})\n";
 
                                 });
                             }

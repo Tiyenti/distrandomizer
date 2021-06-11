@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Entry.cs" />
     <Compile Include="MapLogicInfo.cs" />
+    <Compile Include="Metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandoGame.cs" />
     <Compile Include="RandoMap.cs" />
