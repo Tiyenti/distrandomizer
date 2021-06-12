@@ -1,4 +1,4 @@
-# Distance Randomizer (new! now for 1.0)
+# Distance Randomizer
 A Centrifuge plugin that randomizes Distance's Adventure mode. Almost all maps and abilities are
 shuffled into a random order, requiring you to use some interesting strategies to complete some maps due to being less equipped than the developers intended.
 
@@ -8,7 +8,7 @@ There's now a website for the randomizer plugin at https://tiyenti.github.io/dis
 The latest version of the mod can be found and downloaded from the [releases page](https://github.com/Tiyenti/distrandomizer/releases).
 
 See https://tiyenti.github.io/distrandomizer/install for instructions on how to install
-the mod if you are unsure.
+the mod if you are unsure how to do this.
 
 ## Build instructions
 Obviously, you will first need to clone the repo:
