@@ -113,24 +113,7 @@ namespace DistanceRando
                 // pre start stuff
                 if (started)
                 {
-                    foreach (var obj in FindObjectsOfType<WingCorruptionZone>())
-                    {
-                        Destroy(obj.gameObject);
-                    }
-
-                    // Set map subtitle
-                    var titleObj = FindObjectOfType<LevelIntroTitleLogic>();
-
-                    int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex();
-
-                    if (titleObj)
-                    {
-                        titleObj.subtitleText_.text = $"-  MAP {curMap}/16  -";
-                    }
-                    else
-                    {
-                        print("[RANDOMIZER] title obj null");
-                    }
+                    ApplyRandoChanges.OnModeStarted(randoGame);
                 }
             });
 
@@ -138,36 +121,7 @@ namespace DistanceRando
             {
                 if (started)
                 {
-
-                    foreach (var obj in FindObjectsOfType<AdventureSpecialIntro>())
-                    {
-                        Destroy(obj.gameObject);
-                    }
-
-                    if (!(Game.LevelName == "Enemy" || Game.LevelName == "Credits"))
-                    {
-                        // remove warpanchor cutscenes but keep all warpanchors present in arcade mode
-                        // (this could allow for abyss to unlock an ability)
-                        foreach (var obj in FindObjectsOfType<WarpAnchor>())
-                        {
-                            if (obj.ignoreInArcade_)
-                            {
-                                obj.ignoreInAdventure_ = true;
-                            }
-                            else if (obj.ignoreInAdventure_)
-                            {
-                                obj.ignoreInAdventure_ = false;
-                            }
-                        }
-
-                        foreach (var obj in FindObjectsOfType<GlitchFieldLogic>())
-                        {
-                            if (obj.ignoreInArcade_)
-                            {
-                                Destroy(obj.gameObject);
-                            }
-                        }
-                    }
+                    ApplyRandoChanges.OnPostLoad(randoGame);
                 }
             });
 
@@ -182,7 +136,9 @@ namespace DistanceRando
                     {
                         Console.WriteLine(randoChangesApplied);
                         Console.WriteLine("should only be called once");
-                        ApplyRandoChanges();
+
+                        ApplyRandoChanges.OnGo(randoGame);
+
                         randoChangesApplied = true;
                     }
                     singleRaceStarted = true;
@@ -306,115 +262,6 @@ namespace DistanceRando
             singleRaceStarted = false;
 
             randoGame = null;
-        }
-
-        void ApplyRandoChanges()
-        {
-            if (Game.LevelName == "Enemy" || Game.LevelName == "Credits")
-            {
-                return;
-            }
-
-            RandoMap map = randoGame.maps[Game.LevelName];
-
-            G.Sys.GameManager_.Level_.Settings_.disableBoosting_ = !map.boostEnabled;
-            G.Sys.GameManager_.Level_.Settings_.disableJumping_ = !map.jumpEnabled;
-            G.Sys.GameManager_.Level_.Settings_.disableFlying_ = !map.wingsEnabled;
-            G.Sys.GameManager_.Level_.Settings_.disableJetRotating_ = !map.jetsEnabled;
-
-            CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-            /*car.Boost_.AbilityEnabled_ = map.boostEnabled;
-            car.Jump_.AbilityEnabled_ = map.jumpEnabled;
-            car.Wings_.AbilityEnabled_ = map.wingsEnabled;
-            car.Jets_.AbilityEnabled_ = map.jetsEnabled;*/
-
-            randoGame.jumpShouldBeEnabled = map.jumpEnabled;
-            randoGame.wingsShouldBeEnabled = map.wingsEnabled;
-            randoGame.jetsShouldBeEnabled = map.jetsEnabled;
-            //car.GetComponent<HornGadget>().enabled = true;
-
-            foreach (var obj in UnityEngine.Object.FindObjectsOfType<InfoDisplayLogic>())
-            {
-                if (obj.gameObject.name == "InfoDisplayBox" || obj.gameObject.name == "InfoAndIndicatorDisplayBox")
-                {
-                    GameObject.Destroy(obj.gameObject);
-                }
-                else
-                {
-                    obj.gameObject.RemoveComponent<InfoDisplayLogic>();
-                }
-            }
-
-            foreach (var obj in UnityEngine.Object.FindObjectsOfType<WingCorruptionZone>())
-            {
-                GameObject.Destroy(obj.gameObject);
-            }
-
-            foreach (var obj in UnityEngine.Object.FindObjectsOfType<AdventureAbilitySettings>())
-            {
-                GameObject.Destroy(obj.gameObject);
-            }
-
-            if (map.abilityEnabled != Ability.None)
-            {
-                Console.WriteLine($"enables {map.abilityEnabled.ToString()}");
-                SetAbilitiesTrigger[] triggers = GameObject.FindObjectsOfType<SetAbilitiesTrigger>();
-
-                foreach (var trigger in triggers)
-                {
-                    if (!(trigger.visualsOnly_ || !trigger.showAbilityAlert_))
-                    {
-                        // replace default triggers with a custom solution
-                        // (this is an attempt to fix shockingly inconsistent behaviour with the default triggers)
-                        // (also it lets us have progressive ability icons!! cool!!)
-                        var newTrigger = trigger.gameObject.AddComponent<RandomizerAbilityTrigger>();
-
-                        if (map.abilityEnabled == Ability.Jump)
-                        {
-                            newTrigger.enableJumping = true;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
-                            newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
-                        }
-                        else if (map.abilityEnabled == Ability.Wings)
-                        {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
-                            newTrigger.enableFlying = true;
-                            newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
-                        }
-                        else if (map.abilityEnabled == Ability.Jets)
-                        {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
-                            newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = true;
-                        }
-                        else if (map.abilityEnabled == Ability.Boost)
-                        {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
-                            newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
-                        }
-
-                        trigger.gameObject.RemoveComponent<SetAbilitiesTrigger>();
-                    }
-                    else
-                    {
-                        Destroy(trigger.gameObject);
-                    }
-                }
-            }
-            else
-            {
-                SetAbilitiesTrigger[] triggers = GameObject.FindObjectsOfType<SetAbilitiesTrigger>();
-
-                foreach (var trigger in triggers)
-                {
-                    Destroy(trigger.gameObject);
-                }
-            }
         }
 
         void StartRandoGame()
