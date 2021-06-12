@@ -18,7 +18,7 @@ title: Distrandomizer Changelog
   * The 4-hour timer
 * Changed: The system for the friendly/5-word hash has changed.
   * Previously, the friendly hash was 5 words that directly corrosponded to the first 5 characters of a SHA256 checksum converted to an ASCII string.
-  * In this verison, the friendly hash has been reduced to 4 words, but is now based on a Base64 encoding of the hash instead of the ASCII representation. In short, instead of being 5 instances of 36 possible words, it is now 4 instances of 64 possible words.
+  * In this verison, the friendly hash has been reduced to 4 words, but is now based on a Base64 encoding of the hash instead of the ASCII representation. In short, instead of being 5 instances of 16 possible words, it is now 4 instances of 64 possible words.
   * This helps make the friendly hashes less unwieldly by reducing length and repeat words, while hopefully retaining a similar (or greater) level of uniqueness to the previous iteration. 
   * The 7-character SHA256 string will still be displayed as in the previous version.
 * Changed: The ending sequence in Enemy has been shortened - the warp after the teleporter now takes you directly to the ending area, removing the waterfall and ocean warp cutscene areas, and the trigger at the end that disables all abilities has been removed like in Campaign+. 
