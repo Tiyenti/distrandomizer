@@ -49,7 +49,7 @@ namespace DistanceRando
             }
             else if (name == "Embers")
             {
-                return new MapLogicInfo(true, AbilityRequirement.WingsJets, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(true, AbilityRequirement.JumpOrFlight, AbilityRequirement.WingsJets);
             }
             else if (name == "Isolation")
             {
@@ -69,7 +69,7 @@ namespace DistanceRando
             }
             else if (name == "Contagion")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
             }
             else if (name == "Overload")
             {

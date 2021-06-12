@@ -168,19 +168,25 @@ namespace DistanceRando
                     {
                         if (!isJumpEnabled && logicInfo.abilityUnlockRequirement == AbilityRequirement.Jump)
                         {
-                            Console.WriteLine($"no jump");
+                            Console.WriteLine($"map not in logic; needs jump for the triggerf, which is disabled");
                             // can't complete the map, no jump
                             continue;
                         }
                         else if (!canFly && logicInfo.abilityUnlockRequirement == AbilityRequirement.WingsJets)
                         {
-                            Console.WriteLine($"no flight");
+                            Console.WriteLine($"map not in logic; needs flight for the trigger, which is disabled");
                             // can't complete the map, no flight
                             continue;
                         }
                         else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled))
                         {
-                            Console.WriteLine($"no jump or flight");
+                            Console.WriteLine($"map not in logic; needs jump and flight for the trigger, and one or both is disabled");
+                            // can't complete the map, no nothing
+                            continue;
+                        }
+                        else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpOrFlight && !(canFly || isJumpEnabled))
+                        {
+                            Console.WriteLine($"map not in logic; needs jump or flight for the trigger, of which neither are enabled");
                             // can't complete the map, no nothing
                             continue;
                         }
