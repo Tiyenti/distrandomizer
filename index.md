@@ -14,7 +14,7 @@ on player preference.
 > If you find any bugs or other issues, please report them on [issues page]!
 
 
-## [Go here to download the latest version of mod!](https://github.com/Tiyenti/distrandomizer/releases)
+## [Go here to download the latest version of mod!](https://github.com/Tiyenti/distrandomizer/releases/latest)
 
 ## Differences to the normal Adventure mode
 

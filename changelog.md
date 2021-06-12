@@ -1,6 +1,28 @@
 ---
 title: Distrandomizer Changelog
 ---
+# Changelog
+## v1.0-alpha2 - 2021-06-12
+* **Logic changes:**
+  * Contagion now requires jump to complete. (Complete requirement: `WingsJets` → `JumpWingsJets`)
+    * While Contagion *is* possible to complete without jump, it was annoyingly easy to get stuck, annoyingly difficult to get un-stuck, and not particularly enjoyable or interesting, at least in my opinion. So it's being changed to require jump for the time being. (This may be reverted later, or might be re-added in a psuedo-"hard mode" once options are implemented.)
+  * The ability trigger in Embers can now alternatively be reached with only jump. (Trigger requirement: `WingsJets` → `JumpOrFlight`)
+* Backend: Slightly refactored the code by splitting certain things into seperate classes/files.
+* Fixed: Corrected an issue where randomly-generated seed strings would create a different randomized game compared to the one you would get if you re-entered the same seed manually.
+* Added: Pressing the Show Scores button now displays which abilities you have and what map out of 16 you are currently playing, replacing the default Adventure minimap.
+* Changed: Intro title cards now display "MAP *n*/16" instead of the predefined sector number.
+* Changed: The Instantiation intro cutscene, which was previously removed during randomizer runs, has been re-added. This is primarily to fix some cosmetic issues that occured due to the game using current playlist index for some visuals. This has no major changes on gameplay but will cosmetically affect:
+  * Sector posters
+  * Loading screens
+  * Fixes the first map not having a title card
+  * The 4-hour timer
+* Changed: The system for the friendly/5-word hash has changed.
+  * Previously, the friendly hash was 5 words that directly corrosponded to the first 5 characters of a SHA256 checksum converted to an ASCII string.
+  * In this verison, the friendly hash has been reduced to 4 words, but is now based on a Base64 encoding of the hash instead of the ASCII representation. In short, instead of being 5 instances of 36 possible words, it is now 4 instances of 64 possible words.
+  * This helps make the friendly hashes less unwieldly by reducing length and repeat words, while hopefully retaining a similar (or greater) level of uniqueness to the previous iteration. 
+  * The 7-character SHA256 string will still be displayed as in the previous version.
+* Changed: The ending sequence in Enemy has been shortened - the warp after the teleporter now takes you directly to the ending area, removing the waterfall and ocean warp cutscene areas, and the trigger at the end that disables all abilities has been removed like in Campaign+. 
+
 ## v1.0-alpha1 - 2021-05-28
 * **Major:** Fully updated the randomizer mod to work with Distance 1.0!
 * Updated the mod backend to use the newer Centrifuge modding system instead of the old
