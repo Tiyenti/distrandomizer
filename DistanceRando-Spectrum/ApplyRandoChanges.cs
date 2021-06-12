@@ -41,6 +41,36 @@ namespace DistanceRando
                     }
                 }
             }
+            else if (Game.LevelName == "Enemy")
+            {
+                // Enemy specific changes
+
+                // Shorten the warp to earth cutscene by grabbing the relevant warp anchor
+                // (in this case, the one just before the waterfall area) and altering its properties a bit
+                foreach (var obj in GameObject.FindObjectsOfType<WarpAnchor>())
+                {
+                    if (obj.myID_ == 0 && obj.otherID_ == 51)
+                    {
+                        obj.otherID_ = 53;
+                        obj.slowmoSpeed_ = 1.0f;
+                        obj.time_ = 0.2f;
+                        obj.transitionEffect_ = WarpAnchor.TransitionEffect.Teleport;
+                        obj.audioEventAfter_ = "Stop_DU_ending_sequence";
+                    }
+                }
+
+                // Remove the SetAbilitiesTrigger that disables all your abilties at the end
+                foreach (var obj in GameObject.FindObjectsOfType<SetAbilitiesTrigger>())
+                {
+                    if (obj.enableBoosting_ == false &&
+                        obj.enableJumping_ == false &&
+                        obj.enableFlying_ == false &&
+                        obj.enableJetRotating_ == false)
+                    {
+                        obj.Destroy();
+                    }
+                }
+            }
         }
 
         internal static void OnModeStarted(RandoGame randoGame)
