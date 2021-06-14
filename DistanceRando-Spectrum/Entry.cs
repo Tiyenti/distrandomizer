@@ -28,6 +28,8 @@ namespace DistanceRando
 
         bool randoChangesApplied = false;
 
+        AbilityInventoryScreen carInventoryScreen = new AbilityInventoryScreen();
+
         public void Initialize(IManager manager)
         {
             DontDestroyOnLoad(this);
@@ -36,6 +38,8 @@ namespace DistanceRando
         public void LateInitialize(IManager manager)
         {
             Console.WriteLine("Late Initialize!");
+
+            // Randomizer plugin control events
 
             Events.MainMenu.Initialized.Subscribe((data) =>
             {
@@ -108,6 +112,8 @@ namespace DistanceRando
                 }
             });
 
+            // Events to handle the map changes required for the rando
+
             Events.GameMode.ModeStarted.Subscribe((data) =>
             {
                 // pre start stuff
@@ -163,6 +169,8 @@ namespace DistanceRando
                 }
             });
 
+            // Events to update the abiliyState object, and set the car's abiities to what they should be
+
             Events.Car.Explode.SubscribeAll((sender, data) =>
             {
                 if (sender.GetComponent<PlayerDataLocal>())
@@ -193,29 +201,7 @@ namespace DistanceRando
         {
             if (started)
             {
-                var playerDataLocal = G.Sys.PlayerManager_.Current_.playerData_;
-                if (playerDataLocal)
-                {
-                    if (!playerDataLocal.EnableShowScores_ && playerDataLocal.InputStates_.GetTriggered(InputAction.ShowScore))
-                    {
-                        AbilityBatteryChange[] abilityBatteryChanges = new AbilityBatteryChange[4];
-
-                        if (playerDataLocal.CarLogic_.Boost_.AbilityEnabled_) abilityBatteryChanges[0] = AbilityBatteryChange.Enable;
-                        if (playerDataLocal.CarLogic_.Jump_.AbilityEnabled_) abilityBatteryChanges[1] = AbilityBatteryChange.Enable;
-                        if (playerDataLocal.CarLogic_.Wings_.AbilityEnabled_) abilityBatteryChanges[2] = AbilityBatteryChange.Enable;
-                        if (playerDataLocal.CarLogic_.Jets_.AbilityEnabled_) abilityBatteryChanges[3] = AbilityBatteryChange.Enable;
-
-                        if (playerDataLocal.CarScreenLogic_ != null)
-                        {
-                            playerDataLocal.CarScreenLogic_.StopScrensaver();
-
-                            int curMap = G.Sys.GameManager_.GetCurrentPlaylistIndex();
-
-                            playerDataLocal.CarScreenLogic_.EnableAbilityBattery(abilityBatteryChanges, $"map {curMap}/16");
-                            AudioManager.PostEvent("Play_OpenMap", playerDataLocal.Car_);
-                        }
-                    }
-                }
+                carInventoryScreen.Update();
             }
         }
 
