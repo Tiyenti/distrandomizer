@@ -169,20 +169,7 @@ namespace DistanceRando
                 {
                     if (started)
                     {
-                        RandoMap map = randoGame.maps[Game.LevelName];
-                        CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                        if (car.Jump_.AbilityEnabled_ && !map.jumpEnabled)
-                        {
-                            randoGame.jumpShouldBeEnabled = true;
-                        }
-                        if (car.Wings_.AbilityEnabled_ && !map.wingsEnabled)
-                        {
-                            randoGame.wingsShouldBeEnabled = true;
-                        }
-                        if (car.Jets_.AbilityEnabled_ && !map.jetsEnabled)
-                        {
-                            randoGame.jetsShouldBeEnabled = true;
-                        }
+                        randoGame.abilityState.UpdateAbilityState();
                     }
                 }
             }
@@ -195,37 +182,7 @@ namespace DistanceRando
                     if (started)
                     {
                         Console.WriteLine("Respawn event fired");
-                        CarLogic car = G.Sys.PlayerManager_.Current_.playerData_.CarLogic_;
-                        try
-                        {
-                            RandoMap map = randoGame.maps[Game.LevelName];
-                            if (!singleRaceStarted)
-                            {
-                                randoGame.jumpShouldBeEnabled = map.jumpEnabled;
-                                randoGame.wingsShouldBeEnabled = map.wingsEnabled;
-                                randoGame.jetsShouldBeEnabled = map.jetsEnabled;
-                            }
-                            car.Boost_.AbilityEnabled_ = map.boostEnabled;
-                            car.Jump_.AbilityEnabled_ = randoGame.jumpShouldBeEnabled;
-                            car.Wings_.AbilityEnabled_ = randoGame.wingsShouldBeEnabled;
-                            car.Jets_.AbilityEnabled_ = randoGame.jetsShouldBeEnabled;
-
-                            // Disable stock show scores so we can display our own thing.
-                            car.CarLogicLocal_.PlayerDataLocal_.EnableOrDisableShowScores(false);
-
-                            Console.WriteLine($"Jump {car.Jump_.AbilityEnabled_} - Wings {car.Wings_.AbilityEnabled_} - Jets {car.Jets_.AbilityEnabled_}");
-
-                        }
-                        catch (KeyNotFoundException)
-                        {
-                            // this should only ever happen on Credits or Destination Unknown, so just enable everything
-                            car.Boost_.AbilityEnabled_ = true;
-                            car.Jump_.AbilityEnabled_ = true;
-                            car.Wings_.AbilityEnabled_ = true;
-                            car.Jets_.AbilityEnabled_ = true;
-                        }
-
-                        car.GetComponent<LocalPlayerControlledCar>().showBackToResetWarning_ = false;
+                        randoGame.abilityState.SetCarAbilities(singleRaceStarted);
                     }
                 }
             });

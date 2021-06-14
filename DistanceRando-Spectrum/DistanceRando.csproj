@@ -61,6 +61,7 @@
     <Compile Include="MapLogicInfo.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RandoCarAbilityState.cs" />
     <Compile Include="RandoGame.cs" />
     <Compile Include="RandoLogic.cs" />
     <Compile Include="RandoMap.cs" />

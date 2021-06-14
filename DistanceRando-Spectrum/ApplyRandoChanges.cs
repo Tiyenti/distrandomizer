@@ -115,9 +115,9 @@ namespace DistanceRando
             car.Wings_.AbilityEnabled_ = map.wingsEnabled;
             car.Jets_.AbilityEnabled_ = map.jetsEnabled;*/
 
-            randoGame.jumpShouldBeEnabled = map.jumpEnabled;
-            randoGame.wingsShouldBeEnabled = map.wingsEnabled;
-            randoGame.jetsShouldBeEnabled = map.jetsEnabled;
+            randoGame.abilityState.jumpShouldBeEnabled = map.jumpEnabled;
+            randoGame.abilityState.wingsShouldBeEnabled = map.wingsEnabled;
+            randoGame.abilityState.jetsShouldBeEnabled = map.jetsEnabled;
             //car.GetComponent<HornGadget>().enabled = true;
 
             foreach (var obj in UnityEngine.Object.FindObjectsOfType<InfoDisplayLogic>())
@@ -159,30 +159,30 @@ namespace DistanceRando
                         if (map.abilityEnabled == Ability.Jump)
                         {
                             newTrigger.enableJumping = true;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
+                            newTrigger.enableFlying = randoGame.abilityState.wingsShouldBeEnabled;
                             newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
+                            newTrigger.enableJetRotating = randoGame.abilityState.jetsShouldBeEnabled;
                         }
                         else if (map.abilityEnabled == Ability.Wings)
                         {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
+                            newTrigger.enableJumping = randoGame.abilityState.jumpShouldBeEnabled;
                             newTrigger.enableFlying = true;
                             newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
+                            newTrigger.enableJetRotating = randoGame.abilityState.jetsShouldBeEnabled;
                         }
                         else if (map.abilityEnabled == Ability.Jets)
                         {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
+                            newTrigger.enableJumping = randoGame.abilityState.jumpShouldBeEnabled;
+                            newTrigger.enableFlying = randoGame.abilityState.wingsShouldBeEnabled;
                             newTrigger.enableBoosting = true;
                             newTrigger.enableJetRotating = true;
                         }
                         else if (map.abilityEnabled == Ability.Boost)
                         {
-                            newTrigger.enableJumping = randoGame.jumpShouldBeEnabled;
-                            newTrigger.enableFlying = randoGame.wingsShouldBeEnabled;
+                            newTrigger.enableJumping = randoGame.abilityState.jumpShouldBeEnabled;
+                            newTrigger.enableFlying = randoGame.abilityState.wingsShouldBeEnabled;
                             newTrigger.enableBoosting = true;
-                            newTrigger.enableJetRotating = randoGame.jetsShouldBeEnabled;
+                            newTrigger.enableJetRotating = randoGame.abilityState.jetsShouldBeEnabled;
                         }
 
                         trigger.gameObject.RemoveComponent<SetAbilitiesTrigger>();

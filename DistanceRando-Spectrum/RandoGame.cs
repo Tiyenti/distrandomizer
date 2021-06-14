@@ -10,9 +10,7 @@ namespace DistanceRando
     {
         internal Dictionary<string, RandoMap> maps = new Dictionary<string, RandoMap>();
 
-        internal bool jumpShouldBeEnabled = false;
-        internal bool wingsShouldBeEnabled = false;
-        internal bool jetsShouldBeEnabled = false;
+        internal RandoCarAbilityState abilityState;
 
         internal int seed = 0;
 
@@ -41,6 +39,8 @@ namespace DistanceRando
             seedHash = ConvertHashToString(rawHash);
             truncSeedHash = seedHash.Truncate(7);
             friendlyHash = FriendlyHash(rawHash);
+
+            abilityState = new RandoCarAbilityState(this);
         }
 
         byte[] GenerateSeedHash(string version, Dictionary<string, RandoMap> mapList)
