@@ -2,6 +2,11 @@
 title: Distrandomizer Changelog
 ---
 # Changelog
+## vA.2.1 - 2021-07-06
+* Fixed: Corrected a mistake in the logic code that allowed for Embers to appear before its ability requirements had been met, resulting in an unbeatable game.
+
+> Side note: Yeah, I'm changing the versioning scheme for these alpha releases to something that's admittedly a little idiosyncratic. Main reason for this is that I decided that "v1.0-alphaX" was not a good naming system since I don't believe the design and feature set is currently set in stone enough to consider these v1.0 release candidates - but I also can't exactly go back to version 0 now that I've already released versions under the "v1.0" name, so I've simply opted to truncate "v1.0-alphaX" into "vA.X". ~~Though I will also admit I just like how this is a more compact way to convey mostly the same information.~~
+
 ## v1.0-alpha2 - 2021-06-12
 * **Logic changes:**
   * Contagion now requires jump to complete. (Complete requirement: `WingsJets` → `JumpWingsJets`)
