@@ -39,13 +39,19 @@ namespace DistanceRando.Randomizer.Logic
 
     public class OrAbilityRequirement : LogicRequirement
     {
-        readonly SingleAbilityRequirement Req1;
-        readonly SingleAbilityRequirement Req2;
+        readonly LogicRequirement Req1;
+        readonly LogicRequirement Req2;
 
         public OrAbilityRequirement(Ability a, Ability b)
         {
             Req1 = new SingleAbilityRequirement(a);
             Req2 = new SingleAbilityRequirement(b);
+        }
+
+        public OrAbilityRequirement(Ability a, LogicRequirement b)
+        {
+            Req1 = new SingleAbilityRequirement(a);
+            Req2 = b;
         }
 
         public override bool IsRequirementMet(bool jump, bool wings, bool jets)

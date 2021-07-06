@@ -35,63 +35,105 @@ namespace DistanceRando.Randomizer.Logic
         {
             if (name == "Cataclysm")
             {
-                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.None);
+                return new MapLogicInfo(unlocksAbility: true,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) });
             }
             else if (name == "Diversion")
             {
-                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.None);
+                return new MapLogicInfo(unlocksAbility: true,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) });
             }
             else if (name == "Euphoria")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpOrFlight);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] {
+                                            new OrAbilityRequirement(Ability.Jump, new OrAbilityRequirement(Ability.Wings, Ability.Jets)
+                                        ) });
             }
             else if (name == "Entanglement")
             {
-                return new MapLogicInfo(true, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: true,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Automation")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Abyss")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpOrFlight);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] {
+                                            new OrAbilityRequirement(Ability.Jump, new OrAbilityRequirement(Ability.Wings, Ability.Jets)
+                                        ) });
             }
             else if (name == "Embers")
             {
-                return new MapLogicInfo(true, AbilityRequirement.JumpOrFlight, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] {
+                                            new OrAbilityRequirement(Ability.Jump, new OrAbilityRequirement(Ability.Wings, Ability.Jets))
+                                        },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Isolation")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Repulsion")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Compression")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Research")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[]
+                                            { new OrAbilityRequirement(Ability.Wings, Ability.Jets), 
+                                              new SingleAbilityRequirement(Ability.Jump),
+                                            });
             }
             else if (name == "Contagion")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.JumpWingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[]
+                                            { new OrAbilityRequirement(Ability.Wings, Ability.Jets),
+                                              new SingleAbilityRequirement(Ability.Jump),
+                                            });
             }
             else if (name == "Overload")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else if (name == "Ascension")
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.WingsJets);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new OrAbilityRequirement(Ability.Wings, Ability.Jets) });
             }
             else
             {
-                return new MapLogicInfo(false, AbilityRequirement.None, AbilityRequirement.None);
+                return new MapLogicInfo(unlocksAbility: false,
+                                        unlock: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) },
+                                        completion: new LogicRequirement[] { new SingleAbilityRequirement(Ability.None) });
             }
         }
     }
