@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Centrifuge.Distance.Game;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer
 {
     class RandoCarAbilityState
     {

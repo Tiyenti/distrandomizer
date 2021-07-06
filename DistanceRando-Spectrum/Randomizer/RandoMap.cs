@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer
 {
     public enum Ability { None, Boost, Jump, Wings, Jets }
 

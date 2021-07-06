@@ -5,8 +5,9 @@ using System.Text;
 using Centrifuge.Distance;
 using Centrifuge.Distance.Game;
 using UnityEngine;
+using DistanceRando.CustomBehaviours;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer
 {
     static class ApplyRandoChanges
     {

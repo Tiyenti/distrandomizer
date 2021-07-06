@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 using System.Text;
 using DistanceRando.Randomizer.Logic;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer
 {
     class RandoGame
     {

@@ -8,7 +8,7 @@ using System.Text;
 using UnityEngine;
 using Centrifuge.Distance.Game;
 
-namespace DistanceRando
+namespace DistanceRando.CustomBehaviours
 {
     class RandomizerAbilityTrigger : MonoBehaviour
     {

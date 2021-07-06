@@ -12,6 +12,8 @@ using Reactor.API.Logging;
 using Reactor.API.Storage;
 using Centrifuge.Distance.Game;
 using System.Security.Cryptography;
+using DistanceRando.Randomizer;
+using DistanceRando.CustomBehaviours;
 
 namespace DistanceRando
 {
