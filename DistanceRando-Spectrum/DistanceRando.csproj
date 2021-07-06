@@ -59,6 +59,7 @@
     <Compile Include="CustomBehaviours\AbilityInventoryScreen.cs" />
     <Compile Include="Randomizer\ApplyRandoChanges.cs" />
     <Compile Include="Entry.cs" />
+    <Compile Include="Randomizer\Logic\LogicRequirement.cs" />
     <Compile Include="Randomizer\Logic\MapLogicInfo.cs" />
     <Compile Include="Metadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

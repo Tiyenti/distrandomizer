@@ -7,7 +7,7 @@ namespace DistanceRando
 {
     static class Metadata
     {
-        public static readonly string RandomizerVersion = "1.0-alpha2";
+        public static readonly string RandomizerVersion = "A.3-dev.3";
         public static readonly string LogicVersion = "1.0-alpha2";
 
         public static readonly Dictionary<char, string> FriendlyHashWords = new Dictionary<char, string>() {
