@@ -75,7 +75,7 @@ namespace DistanceRando.Randomizer.Logic
             }
             else if (name == "Embers")
             {
-                return new MapLogicInfo(unlocksAbility: false,
+                return new MapLogicInfo(unlocksAbility: true,
                                         unlock: new LogicRequirement[] {
                                             new OrAbilityRequirement(Ability.Jump, new OrAbilityRequirement(Ability.Wings, Ability.Jets))
                                         },
