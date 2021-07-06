@@ -5,12 +5,12 @@ using System.Text;
 
 namespace DistanceRando.Randomizer.Logic
 {
-    abstract class LogicRequirement
+    public abstract class LogicRequirement
     {
         public abstract bool IsRequirementMet(bool jump, bool wings, bool jets);
     }
 
-    class SingleAbilityRequirement : LogicRequirement
+    public class SingleAbilityRequirement : LogicRequirement
     {
         readonly Ability Requirement;
 
@@ -37,7 +37,7 @@ namespace DistanceRando.Randomizer.Logic
         }
     }
 
-    class OrAbilityRequirement : LogicRequirement
+    public class OrAbilityRequirement : LogicRequirement
     {
         readonly SingleAbilityRequirement Req1;
         readonly SingleAbilityRequirement Req2;

@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer.Logic
 {
     class RandoLogic
     {
+
         public Dictionary<string, RandoMap> GenerateGame(int seed)
         {
             System.Random random = new System.Random(seed);
@@ -70,131 +71,42 @@ namespace DistanceRando
                 {
                     var logicInfo = MapLogicInfo.GetMapLogicInfo(map);
 
-                    Console.WriteLine($"{map} - {logicInfo.abilityCompleteRequirement.ToString()} - {logicInfo.unlocksAbility} - {logicInfo.abilityUnlockRequirement}");
+                    //Console.WriteLine($"{map} - {logicInfo.abilityCompleteRequirement.ToString()} - {logicInfo.unlocksAbility} - {logicInfo.abilityUnlockRequirement}");
                     Console.WriteLine($"{isJumpEnabled} - {isJetsEnabled} - {isWingsEnabled} - {canFly}");
-                    if (logicInfo.unlocksAbility)
+
+                    if (logicInfo.unlocksAbility && trackedAbilities.Count < 3)
                     {
-                        if (!isJumpEnabled && logicInfo.abilityUnlockRequirement == AbilityRequirement.Jump)
-                        {
-                            Console.WriteLine($"map not in logic; needs jump for the triggerf, which is disabled");
-                            // can't complete the map, no jump
-                            continue;
-                        }
-                        else if (!canFly && logicInfo.abilityUnlockRequirement == AbilityRequirement.WingsJets)
-                        {
-                            Console.WriteLine($"map not in logic; needs flight for the trigger, which is disabled");
-                            // can't complete the map, no flight
-                            continue;
-                        }
-                        else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled))
-                        {
-                            Console.WriteLine($"map not in logic; needs jump and flight for the trigger, and one or both is disabled");
-                            // can't complete the map, no nothing
-                            continue;
-                        }
-                        else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpOrFlight && !(canFly || isJumpEnabled))
-                        {
-                            Console.WriteLine($"map not in logic; needs jump or flight for the trigger, of which neither are enabled");
-                            // can't complete the map, no nothing
-                            continue;
-                        }
-                        else
-                        {
-                            // map possibly in logic
-                            // one last check
-                            if (trackedAbilities.Count < 3)
-                            {
-                                Console.WriteLine(trackedAbilities.Count);
-                                var ability = abilityOrder[trackedAbilities.Count];
-                                Console.WriteLine($"{ability.ToString()} - {isJumpEnabled} - {isWingsEnabled} - {isJetsEnabled} - {canFly}");
-                                if (ability == Ability.Jump)
-                                {
-                                    if (logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled))
-                                    {
-                                        // this can be improved, right now even if you could beat the map by reaching the ability trigger
-                                        // and getting the ability you're missing at it, the logic will still ditch it anyway.
-                                        // doesn't really matter for the current officials as most of them that would benefit
-                                        // from this require jumpflight to get the trigger anyway, but still.
+                        Console.WriteLine(trackedAbilities.Count);
+                        var ability = abilityOrder[trackedAbilities.Count];
+                        Console.WriteLine($"{ability.ToString()} - {isJumpEnabled} - {isWingsEnabled} - {isJetsEnabled} - {canFly}");
 
-                                        // nope move along
-                                        Console.WriteLine($"did not add. requries jump+flight to beat, canFly = {canFly}, " +
-                                            $"canJump = {isJumpEnabled} and the enabled ability is {ability.ToString()}");
-                                        continue;
-                                    }
-                                    else if (logicInfo.abilityCompleteRequirement == AbilityRequirement.WingsJets && !canFly)
-                                    {
-                                        // nope move along
-                                        Console.WriteLine($"did not add. requries flight to beat, canFly = {canFly}, and the enabled ability is {ability.ToString()}");
-                                        continue;
-                                    }
-                                    else
-                                    {
-                                        // yep
-                                        trackedAbilities.Add(ability);
-                                        mapsToReturn.Add(map, new RandoMap(Ability.Jump, true, isJumpEnabled, isWingsEnabled, isJetsEnabled));
-                                        isJumpEnabled = true;
-                                        availableMaps.Remove(map);
-                                        Console.WriteLine($"added {map}");
-                                    }
-                                }
-                                else if ((ability == Ability.Wings || ability == Ability.Jets))
-                                {
-                                    if (logicInfo.abilityCompleteRequirement == AbilityRequirement.Jump && !isJumpEnabled)
-                                    {
-                                        // nope move along
-                                        Console.WriteLine($"did not add. requries jump to beat, canJump = {isJumpEnabled}, and the enabled ability is {ability.ToString()}");
-                                        continue;
-
-                                    }
-                                    else
-                                    {
-                                        // yep
-                                        trackedAbilities.Add(ability);
-                                        mapsToReturn.Add(map, new RandoMap(ability, true, isJumpEnabled, isWingsEnabled, isJetsEnabled));
-                                        if (ability == Ability.Wings) isWingsEnabled = true; else isJetsEnabled = true;
-                                        availableMaps.Remove(map);
-                                        Console.WriteLine($"added {map}");
-                                    }
-                                }
-                            }
-                            else
+                        if (IsMapBeatable(isJumpEnabled, canFly, canFly, true, ability, logicInfo))
+                        {
+                            trackedAbilities.Add(ability);
+                            mapsToReturn.Add(map, new RandoMap(ability, true, isJumpEnabled, isWingsEnabled, isJetsEnabled));
+                            
+                            switch (ability)
                             {
-                                // yep
-                                Console.WriteLine($"added {map}");
-                                mapsToReturn.Add(map, new RandoMap(Ability.None, true, isJumpEnabled, isWingsEnabled, isJetsEnabled));
-                                availableMaps.Remove(map);
+                                case Ability.Jump:
+                                    isJumpEnabled = true;
+                                    break;
+                                case Ability.Wings:
+                                    isWingsEnabled = true;
+                                    break;
+                                case Ability.Jets:
+                                    isJetsEnabled = true;
+                                    break;
                             }
+
+                            availableMaps.Remove(map);
+                            Console.WriteLine($"added {map}");
                         }
                     }
                     else
                     {
-                        if (!isJumpEnabled && logicInfo.abilityCompleteRequirement == AbilityRequirement.Jump)
+                        if (IsMapBeatable(isJumpEnabled, isWingsEnabled, isJetsEnabled, false, Ability.None, logicInfo))
                         {
-                            Console.WriteLine($"didn't add! map needs jump, and it is not enabled");
-                            // can't complete the map, no jump
-                            continue;
-                        }
-                        else if (!canFly && logicInfo.abilityCompleteRequirement == AbilityRequirement.WingsJets)
-                        {
-                            Console.WriteLine($"didn't add! map needs flight, and wings/jets are not enabled");
-                            // can't complete the map, no flight
-                            continue;
-                        }
-                        else if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpWingsJets && (!canFly || !isJumpEnabled)))
-                        {
-                            // nope move along
-                            Console.WriteLine($"didn't add! map needs jump AND flight, and one or both are not enabled");
-                            continue;
-                        }
-                        else if ((logicInfo.abilityCompleteRequirement == AbilityRequirement.JumpOrFlight && !(canFly || isJumpEnabled)))
-                        {
-                            // nope move along
-                            Console.WriteLine($"didn't add! map needs jump OR flight, and neither are enabled");
-                            continue;
-                        }
-                        else
-                        {
-                            // map probably in logic, so let's add it
+                            // map should be in logic
                             mapsToReturn.Add(map, new RandoMap(Ability.None, true, isJumpEnabled, isWingsEnabled, isJetsEnabled));
                             availableMaps.Remove(map);
                             Console.WriteLine($"added {map}");
@@ -204,6 +116,73 @@ namespace DistanceRando
             }
 
             return mapsToReturn;
+        }
+        
+        bool CheckLogicRequirementsAreMet(bool jump, bool wings, bool jets, LogicRequirement[] logicRequirements)
+        {
+            // Check if all individual logic requirements have been met, allowing for the map to be completed.
+            int count = 0;
+
+            foreach (var logicReq in logicRequirements)
+            {
+                if (logicReq.IsRequirementMet(jump, wings, jets))
+                {
+                    count++;
+                }
+            }
+
+            if (count == logicRequirements.Length)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        bool IsMapBeatable(bool jump, bool wings, bool jets, bool mapUnlocksAbility, Ability abilityUnlocked, MapLogicInfo logicInfo)
+        {
+            if (mapUnlocksAbility)
+            {
+                // First check if ability trigger can be reached
+
+                var triggerReachable = CheckLogicRequirementsAreMet(jump, wings, jets, logicInfo.AbilityUnlockRequirements);
+                
+                if (triggerReachable)
+                {
+                    // Now check if the map is beatable with the unlocked ability.
+                    bool result;
+                    switch (abilityUnlocked)
+                    {
+                        case Ability.Jump:
+                            result = CheckLogicRequirementsAreMet(true, wings, jets, logicInfo.MapCompletionRequirements);
+                            break;
+                        case Ability.Wings:
+                            result = CheckLogicRequirementsAreMet(jump, true, jets, logicInfo.MapCompletionRequirements);
+                            break;
+                        case Ability.Jets:
+                            result = CheckLogicRequirementsAreMet(jump, wings, true, logicInfo.MapCompletionRequirements);
+                            break;
+                        default:
+                            result = CheckLogicRequirementsAreMet(jump, wings, jets, logicInfo.MapCompletionRequirements);
+                            break;
+                    }
+
+                    // Return the result.
+                    return result;
+                }
+                else
+                {
+                    // Cannot reach trigger, so the map is not completable.
+                    return false;
+                }
+            }
+            else
+            {
+                // There's no ability unlock on this map, so we can just check to see if the map itself is beatable.
+                return CheckLogicRequirementsAreMet(jump, wings, jets, logicInfo.MapCompletionRequirements);
+            }
         }
     }
 }

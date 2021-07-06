@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace DistanceRando
+namespace DistanceRando.Randomizer.Logic
 {
 
     public enum AbilityRequirement { None, Jump, WingsJets, JumpWingsJets, JumpOrFlight }
@@ -11,14 +11,24 @@ namespace DistanceRando
     public class MapLogicInfo
     {
         public bool unlocksAbility = false;
-        public AbilityRequirement abilityUnlockRequirement = AbilityRequirement.None;
-        public AbilityRequirement abilityCompleteRequirement = AbilityRequirement.None;
+        public LogicRequirement[] AbilityUnlockRequirements;
+        public LogicRequirement[] MapCompletionRequirements;
 
+        [Obsolete("Use the newer LogicRequirement[] constructor instead.", true)]
         public MapLogicInfo(bool unlocksAbilitiy, AbilityRequirement unlock, AbilityRequirement completion)
         {
             this.unlocksAbility = unlocksAbilitiy;
-            abilityUnlockRequirement = unlock;
-            abilityCompleteRequirement = completion;
+
+            //abilityUnlockRequirement = unlock;
+            //abilityCompleteRequirement = completion;
+        }
+
+        public MapLogicInfo(bool unlocksAbility, LogicRequirement[] unlock, LogicRequirement[] completion)
+        {
+            this.unlocksAbility = unlocksAbility;
+
+            AbilityUnlockRequirements = unlock;
+            MapCompletionRequirements = completion;
         }
 
         public static MapLogicInfo GetMapLogicInfo(string name)
