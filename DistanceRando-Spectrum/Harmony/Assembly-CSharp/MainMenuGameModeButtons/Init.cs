@@ -57,7 +57,7 @@ namespace DistanceRando.Harmony
 				return copy;
 			}
 
-			createButton(Metadata.MenuButtonText, Metadata.MenuButtonDesc, () => Entry.Instance.ShowRandomizerMenu());
+			createButton(Metadata.MenuButtonText, Metadata.MenuButtonDesc, Entry.Instance.ShowRandomizerMenu);
 
 			layout.Sort(container.GetChildren().ToList());
 			layout.Reposition();
