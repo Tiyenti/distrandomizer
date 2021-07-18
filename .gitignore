@@ -1,6 +1,9 @@
 ## Ignore dependencies directory
 /Dependencies/
 
+## Ignore build output
+/Build/
+
 ### BEGIN VISUAL STUDIO GITIGNORE
 
 ## Ignore Visual Studio temporary files, build results, and

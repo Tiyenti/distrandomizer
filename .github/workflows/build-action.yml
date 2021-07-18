@@ -39,15 +39,13 @@ jobs:
         
       - name: Build solution
         run: msbuild DistanceRando-Spectrum.sln
-        
-      # in future, artificat deployment should also be here probably
 
-      # Runs a single command using the runners shell
-      #- name: Run a one-line script
-      #  run: echo Hello, world!
+      - name: Grab hash for artifact build name
+        id: vars
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
-      # Runs a set of commands using the runners shell
-      #- name: Run a multi-line script
-      #  run: |
-      #    echo Add other actions to build,
-      #    echo test, and deploy your project.
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: DistanceRando-dev-sha.${{ steps.vars.outputs.sha_short }}
+          path: Build

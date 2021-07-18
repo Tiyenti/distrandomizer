@@ -104,4 +104,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>echo Creating build output directory...
+mkdir "$(SolutionDir)Build\DistanceRando"
+echo Copying $(TargetFileName)...
+copy "$(TargetPath)" "$(SolutionDir)Build\DistanceRando"
+echo Copying mod.json...
+copy "$(SolutionDir)mod.json" "$(SolutionDir)Build\DistanceRando"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
