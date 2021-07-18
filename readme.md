@@ -15,38 +15,8 @@ Obviously, you will first need to clone the repo:
 
     $ git clone https://github.com/Tiyenti/distrandomizer.git
 
-You will need to provide four dependant assemblies in order to build the project:
-
-* `UnityEngine.dll` from Distance
-* `Assembly-CSharp.dll` from Distance
-* `Reactor.API.dll` from [Centrifuge](https://github.com/Ciastex/Centrifuge)
-* `Centrifuge.Distance.dll` from the [Distance GSL for Centrifuge](https://github.com/REHERC/Centrifuge.Distance)
-
-These four assemblies must be provided in a directory named `Dependencies` within the
-repository root. The batch file `setup_symlinks.bat` will automatically create the `Dependencies`
-directory and four symlinks to the expected locations of these files on Windows, assuming Distance is installed at `C:\Program Files (x86)\Steam\steamapps\common\Distance\Distance_Data`.
-
-To run this file, open an elevated* terminal window in the project root directory and run:
-
-     # .\setup_symlinks.bat
-
-> _(* Note: If you have Developer Mode enabled in Windows 10, you shouldn't require elevated permissions to create symlinks and can run the bat file in a regular-permissions terminal.)_
-
-This should automatically create the expected directory structure, which should look something
-like the following:
-
-    /
-    ┕ Dependencies
-      ┕ Assembly-CSharp.dll
-      ┕ Centrifuge.Distance.dll
-      ┕ Reactor.API.dll
-      ┕ UnityEngine.dll
-    ┕ DistanceRando-Spectrum
-      ┕ ...
-    ┕ mod.json
-    ┕ ...
-
-If you are not on Windows or your Distance install is located on a different directory, you can either manually create the symlinks, or instead just copy the requisite .dll files into the Dependencies directory (which is, of course, an available option on Windows as well).
+You will need to make sure the NuGet packages are present in  the solution folder:
+Right-click on the solution in the `Solution Explorer` then click `Restore NuGet Packages`
 
 distrandomizer is currently being developed with Visual Studio 2019 Community, so this is the reccomended IDE for developing/building the mod. Other IDE solutions may work as well
 although they are not officially supported.
@@ -56,6 +26,8 @@ then be copied from the build directory to a new directory in the `[distance-pat
 
     Distance_Data/
     ┕ Centrifuge
+      ┕ GameSupport
+        ┕ Centrifuge.Distance.dll
       ┕ Mods
         ┕ DistanceRando
           ┕ DistanceRando.Plugin.dll
