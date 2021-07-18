@@ -52,6 +52,8 @@ namespace DistanceRando.Harmony
 					}
 				}
 
+				copy.transform.Find("Finish Status").gameObject.SetActive(false);
+
 				return copy;
 			}
 
