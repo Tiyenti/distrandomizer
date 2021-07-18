@@ -39,7 +39,7 @@
     <Reference Include="Assembly-CSharp, Version=9.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Centrifuge.GameSupport.Distance.3.0.7868.41513\lib\net35\Assembly-CSharp.dll</HintPath>
     </Reference>
-    <Reference Include="Centrifuge.Distance, Version=3.0.7867.3370, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Centrifuge.Distance, Version=3.0.7868.41513, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Centrifuge.GameSupport.Distance.3.0.7868.41513\lib\net35\Centrifuge.Distance.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e, processorArchitecture=MSIL">

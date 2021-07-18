@@ -7,7 +7,7 @@ namespace DistanceRando
 		public const string RandomizerVersion = "A.2.1";
 		public const string LogicVersion = "1.0-alpha2";
 
-		public const string MenuButtonText = "Distrandomizer";
+		public const string MenuButtonText = "Randomizer";
 		public const string MenuButtonDesc = "Start a new randomized run of the official campaign";
 
 		public static readonly Dictionary<char, string> FriendlyHashWords = new Dictionary<char, string>() {
