@@ -32,7 +32,7 @@ jobs:
         #  vs-version: "[15.0,16.9)"
         
       - name: Setup NuGet
-        uses: NuGet/setup-nuget@v1.0.2
+        uses: NuGet/setup-nuget@v1.0.5
     
       - name: Restore NuGet packages
         run: nuget restore DistanceRando-Spectrum.sln
