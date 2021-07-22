@@ -54,7 +54,7 @@ jobs:
           $codeversion = "${{ steps.versioninfo.outputs.branch }}-${{ steps.versioninfo.outputs.sha_short }}"
           echo "::set-output name=version::$(echo $codeversion)"
           $output = "namespace DistanceRando { internal static partial class Metadata { public const string RandomizerVersion = `"$codeversion`"; } }"
-          $outputfile = ./DistanceRando-Spectrum/VersionNumber.cs
+          $outputfile = "./DistanceRando-Spectrum/VersionNumber.cs"
           Write-Output $output | Out-File -Encoding utf8 -FilePath $outputfile
 
       - name: Build solution
