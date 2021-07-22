@@ -49,31 +49,6 @@ namespace DistanceRando
 				ResetValues();
 			});
 
-			Events.Scene.BeginSceneSwitchFadeOut.Subscribe((data) => {
-				// Yes. We are intercepting a map load. I know it's bad, but this is the only way to get this to work I could find :P
-				if (startGame)
-				{
-					Console.WriteLine(G.Sys.GameManager_.NextLevelPathRelative_);
-					if (G.Sys.GameManager_.NextLevelPathRelative_ == "OfficialLevels/Instantiation.bytes")
-					{
-						StartRandoGame();
-					}
-					else
-					{
-						Console.WriteLine("rando game cancelled");
-						startGame = false;
-						ResetValues();
-					}
-
-					// If the speedrun timer is not enabled, then hide the text manually
-					if (G.Sys.OptionsManager_.General_.SpeedrunTimer_ == false)
-					{
-						var watermarkText = GameObject.Find("AlphaVersion");
-						watermarkText.GetComponent<UILabel>().enabled = false;
-					}
-				}
-			});
-
 			// Events to handle the map changes required for the rando
 
 			Events.GameMode.ModeStarted.Subscribe((data) =>
@@ -161,17 +136,17 @@ namespace DistanceRando
 		public void ShowRandomizerMenu()
 		{
 			// if prepped to start, show randomizer settings
-			if (startGame)
+			/*if (startGame)
 			{
 				G.Sys.MenuPanelManager_.ShowError($"Adventure Randomizer {Metadata.RandomizerVersion}\n\n" +
 												$"Seed hash: [FF0000]{randoGame.friendlyHash}[-]\n" +
 												$"({randoGame.truncSeedHash})\n\nStart the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.",
 												"Randomizer Config");
 				return;
-			}
+			}*/
 
-			if (!G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.trackmogrifyInput_.isSelected)
-			{
+			//if (!G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.trackmogrifyInput_.isSelected)
+			//{
 				G.Sys.MenuPanelManager_.TrackmogrifyMenuLogic_.Display((inputSeed, isRandom) =>
 				{
 					var usedSeed = inputSeed;
@@ -181,24 +156,15 @@ namespace DistanceRando
 					// Generate randomizer settings
 					randoGame = new RandoGame(usedSeed, Metadata.LogicVersion);
 
-					G.Sys.MenuPanelManager_.ShowError($"Rando seed has been set to:\n[FF0000]{inputSeed.Trim()}[-]\n\n" +
+					G.Sys.MenuPanelManager_.ShowOkCancel(
+						$"Rando seed has been set to:\n[FF0000]{inputSeed.Trim()}[-]\n\n" +
 						$"Hash: [FF0000]{randoGame.friendlyHash}[-]\n({randoGame.truncSeedHash})\n\n" +
-						"Start the [FF0000]Instantiation[-] map in Adventure mode to begin, or any other map to cancel.", "Rando enabled");
-
-					startGame = true;
-					Game.WatermarkText =
-						$"ADVENTURE RANDOMIZER {Metadata.RandomizerVersion}\n{randoGame.friendlyHash} ({randoGame.truncSeedHash})\n";
-
-					// If the speedrun timer is not enabled, show the text manually here
-					if (G.Sys.OptionsManager_.General_.SpeedrunTimer_ == false)
-                    {
-						var watermarkText = GameObject.Find("AlphaVersion");
-						watermarkText.GetComponent<UILabel>().enabled = true;
-						// Also set the width to be wider, so it can display the information more cleanly.
-						watermarkText.GetComponent<UILabel>().width = 500;
-                    }
+						"Select OK to start this game, or Cancel to back out if something looks wrong.",
+						$"Adventure Randomizer {Metadata.RandomizerVersion}",
+						() => { StartRandoGame(); },
+						null);
 				});
-			}
+			//}
 		}
 
 		// Show ability inventory on show scores press
@@ -244,6 +210,8 @@ namespace DistanceRando
 
 			started = true;
 			startGame = false;
+
+			G.Sys.GameManager_.GoToCurrentLevel(GameManager.OpenOnMainMenuInit.UsePrevious, false);
 		}
 
 		string GetLevelPathFromName(string name)
