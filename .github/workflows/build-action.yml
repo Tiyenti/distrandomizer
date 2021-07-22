@@ -88,7 +88,7 @@ jobs:
 
       - name: Generate zipped file for release
         if: ${{ github.event_name == 'release' }}
-        run: Compress-Archive Build/DistanceRando DistanceRando-${{ steps.genversion.outputs.version }}.zip
+        run: Compress-Archive Build/DistanceRando "DistanceRando-${{ steps.genversion.outputs.version }}.zip"
 
       - name: Upload release asset
         if: ${{ github.event_name == 'release' }}
