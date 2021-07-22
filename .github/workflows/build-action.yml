@@ -51,7 +51,7 @@ jobs:
         id: genversion
         if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: |
-          $codeversion = ${{ steps.vars.versioninfo.branch }}-${{ steps.vars.versioninfo.sha_short }}
+          $codeversion = "${{ steps.versioninfo.outputs.branch }}-${{ steps.versioninfo.outputs.sha_short }}"
           echo "::set-output name=version::$(echo $codeversion)"
           $output = "namespace DistanceRando { internal static partial class Metadata { public const string RandomizerVersion = `"$codeversion`"; } }"
           $outputfile = ./DistanceRando-Spectrum/VersionNumber.cs)
@@ -63,5 +63,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
-          name: DistanceRando-${{ steps.vars.genversion.version }}
+          name: DistanceRando-${{ steps.genversion.outputs.version }}
           path: Build
