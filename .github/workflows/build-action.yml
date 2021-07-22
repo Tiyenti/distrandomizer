@@ -87,11 +87,11 @@ jobs:
           path: Build
 
       - name: Generate zipped file for release
-        if: ${{ github.event_name == "release" }}
+        if: ${{ github.event_name == 'release' }}
         run: Compress-Archive Build/DistanceRando DistanceRando-${{ steps.genversion.outputs.version }}.zip
 
       - name: Upload release asset
-        if: ${{ github.event_name == "release" }}
+        if: ${{ github.event_name == 'release' }}
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.release.upload_url }}
