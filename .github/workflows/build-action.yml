@@ -37,9 +37,25 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore DistanceRando-Spectrum.sln
         
-      - name: Generate/update version from commit/tag data
-        id: versionnum
-        run: echo "::set-output name=version::$(./Build` Scripts/version.ps1)"
+      #- name: Generate/update version from commit/tag data
+      #  id: versionnum
+      #  run: echo "::set-output name=version::$(./Build` Scripts/version.ps1)"
+
+      - name: Obtain info for versioning
+        id: versioninfo
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo "::set-output name=branch::$(git branch --show-current)"
+      
+      - name: Generate VersionNumber.cs prior to build
+        id: genversion
+        if: ${{ github.event_name == "push" || github.event_name == "pull_request" }}
+        run: |
+          $codeversion = ${{ steps.vars.versioninfo.branch }}-${{ steps.vars.versioninfo.sha_short }}
+          echo "::set-output name=version::$(echo $codeversion)"
+          $output = "namespace DistanceRando { internal static partial class Metadata { public const string RandomizerVersion = `"$codeversion`"; } }"
+          $outputfile = ./DistanceRando-Spectrum/VersionNumber.cs)
+          Write-Output $output | Out-File -Encoding utf8 -FilePath $outputfile
 
       - name: Build solution
         run: msbuild DistanceRando-Spectrum.sln /p:BuiltOnCI=true
@@ -47,5 +63,5 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
-          name: DistanceRando-${{ steps.vars.versionnum.version }}
+          name: DistanceRando-${{ steps.vars.genversion.version }}
           path: Build
