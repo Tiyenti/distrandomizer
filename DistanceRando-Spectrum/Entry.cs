@@ -64,6 +64,13 @@ namespace DistanceRando
 						startGame = false;
 						ResetValues();
 					}
+
+					// If the speedrun timer is not enabled, then hide the text manually
+					if (G.Sys.OptionsManager_.General_.SpeedrunTimer_ == false)
+					{
+						var watermarkText = GameObject.Find("AlphaVersion");
+						watermarkText.GetComponent<UILabel>().enabled = false;
+					}
 				}
 			});
 
@@ -180,7 +187,16 @@ namespace DistanceRando
 
 					startGame = true;
 					Game.WatermarkText =
-						$"ADVENTURE RANDOMIZER {Metadata.RandomizerVersion}\n{randoGame.friendlyHash}\n({randoGame.truncSeedHash})\n";
+						$"ADVENTURE RANDOMIZER {Metadata.RandomizerVersion}\n{randoGame.friendlyHash} ({randoGame.truncSeedHash})\n";
+
+					// If the speedrun timer is not enabled, show the text manually here
+					if (G.Sys.OptionsManager_.General_.SpeedrunTimer_ == false)
+                    {
+						var watermarkText = GameObject.Find("AlphaVersion");
+						watermarkText.GetComponent<UILabel>().enabled = true;
+						// Also set the width to be wider, so it can display the information more cleanly.
+						watermarkText.GetComponent<UILabel>().width = 500;
+                    }
 				});
 			}
 		}
