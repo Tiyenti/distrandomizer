@@ -2,9 +2,10 @@
 
 namespace DistanceRando
 {
-	internal static class Metadata
+	internal static partial class Metadata
 	{
-		public const string RandomizerVersion = "A.2.1";
+		// Metadata.RandomizerVersion value present in a seperate file, in VersionNumber.cs.
+		// This file is generated during pre-build so it can be updated automatically.
 		public const string LogicVersion = "1.0-alpha2";
 
 		public const string MenuButtonText = "Randomizer";

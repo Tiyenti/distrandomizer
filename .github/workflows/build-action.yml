@@ -37,15 +37,15 @@ jobs:
       - name: Restore NuGet packages
         run: nuget restore DistanceRando-Spectrum.sln
         
-      - name: Build solution
-        run: msbuild DistanceRando-Spectrum.sln
+      - name: Generate/update version from commit/tag data
+        id: versionnum
+        run: echo "::set-output name=version::'./Build Scripts/version.ps1'"
 
-      - name: Grab hash for artifact build name
-        id: vars
-        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+      - name: Build solution
+        run: msbuild DistanceRando-Spectrum.sln /p:BuiltOnCI=true
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v2
         with:
-          name: DistanceRando-dev-sha.${{ steps.vars.outputs.sha_short }}
+          name: DistanceRando-${{ steps.vars.versionnum.version }}
           path: Build

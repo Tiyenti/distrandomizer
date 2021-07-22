@@ -4,6 +4,9 @@
 ## Ignore build output
 /Build/
 
+## Ignore the version number, which is generated in prebuild
+/DistanceRando-Spectrum/VersionNumber.cs
+
 ### BEGIN VISUAL STUDIO GITIGNORE
 
 ## Ignore Visual Studio temporary files, build results, and

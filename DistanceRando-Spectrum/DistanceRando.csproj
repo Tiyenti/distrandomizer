@@ -99,6 +99,7 @@
     <Compile Include="Randomizer\Logic\RandoLogic.cs" />
     <Compile Include="Randomizer\RandoMap.cs" />
     <Compile Include="CustomBehaviours\RandomizerAbilityTrigger.cs" />
+    <Compile Include="VersionNumber.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -111,5 +112,14 @@ echo Copying $(TargetFileName)...
 copy "$(TargetPath)" "$(SolutionDir)Build\DistanceRando"
 echo Copying mod.json...
 copy "$(SolutionDir)mod.json" "$(SolutionDir)Build\DistanceRando"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>if $(BuiltOnCI) == false (
+    echo Updating version based on Git commit/tag data...
+    powershell -ExecutionPolicy Bypass -NoProfile -NonInteractive -File "$(SolutionDir)Build Scripts\version.ps1" -Path "$(SolutionDir)
+)</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BuiltOnCI>false</BuiltOnCI>
   </PropertyGroup>
 </Project>
