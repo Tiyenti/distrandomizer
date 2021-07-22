@@ -9,6 +9,8 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+  release:
+    types: [ created ]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -49,10 +51,28 @@ jobs:
       
       - name: Generate VersionNumber.cs prior to build
         id: genversion
-        if: ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         run: |
-          $codeversion = "${{ steps.versioninfo.outputs.branch }}-${{ steps.versioninfo.outputs.sha_short }}"
-          echo "::set-output name=version::$(echo $codeversion)"
+          if ($env:GITHUB_EVENT_NAME -eq "push")
+          {
+            $codeversion = "${{ steps.versioninfo.outputs.branch }}-${{ steps.versioninfo.outputs.sha_short }}"
+            $version = $codeversion
+          }
+          elseif ($env:GITHUB_EVENT_NAME -eq "pull_request")
+          {
+            $codeversion = "pr${{ github.event.pull_request.number }}-${{ steps.versioninfo.outputs.sha_short }}"
+            $version = $codeversion
+          }
+          elseif ($env:GITHUB_EVENT_NAME -eq "release")
+          {
+            $version = "${{ github.event.release.tag_name }}"
+            $codeversion = $version.Substring(1)
+          }
+          else
+          {
+            $codeversion = "autoversioning-broke"
+            $version = $codeversion
+          }
+          echo "::set-output name=version::$(echo $version)"
           $output = "namespace DistanceRando { internal static partial class Metadata { public const string RandomizerVersion = `"$codeversion`"; } }"
           $outputfile = "./DistanceRando-Spectrum/VersionNumber.cs"
           Write-Output $output | Out-File -Encoding utf8 -FilePath $outputfile
@@ -65,3 +85,14 @@ jobs:
         with:
           name: DistanceRando-${{ steps.genversion.outputs.version }}
           path: Build
+
+      - name: Generate zipped file for release
+        if: ${{ github.event_name == "release" }}
+        run: Compress-Archive Build/DistanceRando DistanceRando-${{ steps.genversion.outputs.version }}.zip
+
+      - name: Upload release asset
+        if: ${{ github.event_name == "release" }}
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: DistanceRando-${{ steps.genversion.outputs.version }}.zip
