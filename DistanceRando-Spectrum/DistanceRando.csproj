@@ -106,6 +106,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
+    <BuiltOnCI>false</BuiltOnCI>
+  </PropertyGroup>
+  <PropertyGroup>
     <PostBuildEvent>echo Creating build output directory...
 mkdir "$(SolutionDir)Build\DistanceRando"
 echo Copying $(TargetFileName)...
@@ -118,8 +121,5 @@ copy "$(SolutionDir)mod.json" "$(SolutionDir)Build\DistanceRando"</PostBuildEven
     echo Updating version based on Git commit/tag data...
     powershell -ExecutionPolicy Bypass -NoProfile -NonInteractive -File "$(SolutionDir)Build Scripts\version.ps1" -Path "$(SolutionDir)
 )</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <BuiltOnCI>false</BuiltOnCI>
   </PropertyGroup>
 </Project>
