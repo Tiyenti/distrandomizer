@@ -39,7 +39,7 @@ jobs:
         
       - name: Generate/update version from commit/tag data
         id: versionnum
-        run: echo "::set-output name=version::$('./Build Scripts/version.ps1)'"
+        run: echo "::set-output name=version::$('./Build Scripts/version.ps1')"
 
       - name: Build solution
         run: msbuild DistanceRando-Spectrum.sln /p:BuiltOnCI=true
